@@ -10,7 +10,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 namespace pdfScanner
 {
     public partial class PDFsender : Form
-    { //כנרת טלפון
+    { //כנרת דף תקציב
         string[] filesnames;
         string FirstPage;
         string DataBasePath = "";
@@ -20,42 +20,15 @@ namespace pdfScanner
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
         Outlook.Application app;
-        const string Subject = "דו\"ח טלפון ";
-        const string Title = "שליחת דוח טלפון";
+        const string Subject = "דף תקציב ";
+        const string Title = "שליחת דפי תקציב";
         const string DBPASS = "alibaba";
-        const string Seperator = "תוחולש";
-        const string PrintName = @"\דוח_טלפון_להדפסה.pdf";
-        const int AccountLine = 3;
+        const string Seperator = "#";
+        const string PrintName = @"\דפי_תקציב_להדפסה.pdf";
+        const int MESSAGE = 4;
+        const int REGULAR = 0;
 
         OpenFileDialog file = new OpenFileDialog();
-
-        string SearchForAccountNumner(string page)
-        {
-            string[] words = page.Split('\n');
-            /*
-             * helps to detect the accunt line *
-             * string str = "";
-            for (int i = 0; i < words.Length; i++)
-			{
-			    str += i.ToString() +"   " + words[i] + "\n";
-			}
-            MessageBox.Show(str);*/
-            return GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[AccountLine])));
-
-        }
-
-        string GetAccountNumber(string text)
-        {
-            string str = "";
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text[i] >= '0' && text[i] <= '9')
-                    str += text[i].ToString();
-            }
-            if (str == null || str == "")
-                return "-1";
-            return str;
-        }
 
         public PDFsender()
         {
@@ -135,16 +108,68 @@ namespace pdfScanner
             RunCmdCommand("start " + DASKTOPLOCATION + @"\TESTFILE.txt");
         }
 
-        bool IsLastPage(string page)
+        private void SendToAllDB_Click(object sender, EventArgs e)
         {
-            if (Seperator == "")
+            file.Reset();
+            file.ShowDialog();
+            if (!InitRun())
             {
-                return true;
+                Enablebuttons();
+                BackToHome();
+                return;
             }
-            string[] SP = new string[] { Seperator };
-            string[] words = page.Split(SP, StringSplitOptions.None);
 
-            return words.Length > 1;
+            app = new Outlook.Application();
+            LoadBar.Maximum = int.Parse(EndOfRows.ToString());
+            Disablebuttons();
+
+            object[,] mails = xlApp.get_Range("D2", "D" + EndOfRows).Value2;
+            object[,] mails2 = xlApp.get_Range("F2", "F" + EndOfRows).Value2;
+            for (int i = 1; i <= mails.GetLength(0); i++)
+            {
+                try
+                {
+
+                    string AC = "";
+                    if (mails[i, 1] != null) AC = mails[i, 1].ToString();
+                    if (AC == null || AC == "")
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        SendMail(AC, file.FileName, 4);
+
+                        string AC2 = "";
+                        if (mails2[i, 1] != null)
+                            AC2 = mails[i, 1].ToString();
+                        if (AC2 != null && AC2 != "")
+                        {
+                            try
+                            {
+                                SendMail(AC2, (file.FileName).ToString(), MESSAGE);
+                            }
+                            catch (Exception E)
+                            {
+
+                            }
+                        }
+                    }
+                    catch (Exception t)
+                    {
+                        MessageBox.Show(t.ToString());
+                    }
+                    LoadBar.Value = i;
+                }
+                catch (Exception t)
+                {
+                    MessageBox.Show(t.ToString());
+                }
+            }
+            ClearExcle();
+            Enablebuttons();
+            BackToHome();
         }
 
         private void ChooseFile_Click(object sender, EventArgs e)
@@ -351,20 +376,33 @@ namespace pdfScanner
             return false;
         }
 
-        void SendMail(string ToMail, string filename)
+        void SendMail(string ToMail, string filename, int k)
         {
             Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
             mail.To = ToMail;
             mail.Subject = Subject;
+            if (k == 4)
+            {
+                mail.Subject = "הודעה ";
+            }
             DateTime t = DateTime.Now;
             string subname = ((t.Month) - 1).ToString() + "/" + t.Year.ToString() + " ";
             if (t.Month == 1)
             {
                 subname = "12/" + t.Year.ToString() + " ";
             }
+            if (k == 4)
+                subname = " ";
             mail.Subject += subname;
             mail.Subject += addtotitle1.Text;
-            mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename + "_locked.pdf");
+            if (k == 4)
+            {
+                mail.Attachments.Add((filename));
+            }
+            else
+            {
+                mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename + "_locked.pdf");
+            }
             try
             {
                 ((Outlook._MailItem)mail).Send();
@@ -373,6 +411,46 @@ namespace pdfScanner
             {
                 MessageBox.Show(Ex.ToString());
             }
+        }
+
+        bool IsLastPage(string page)
+        {
+            string[] SP = new string[] {Seperator};
+            string[] words = page.Split(SP, StringSplitOptions.None);
+
+            return words.Length > 1;
+        }
+
+        string SearchForAccountNumner(string page)
+        {
+            string[] words = page.Split('\n');
+            string str;
+            int i = 0;
+            do
+            {
+                str = GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[i])));
+                i++;
+            }
+            while ((str == "" || str == null) && i < 3);
+            if (str == "" || str == null)
+                return "-1";
+            return str;
+
+        }
+
+        string GetAccountNumber(string text)
+        {
+            string str = "";
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] >= '0' && text[i] <= '9')
+                {
+                    str += text[i].ToString();
+                }
+            }
+            if (str == null || str == "")
+                return "-1";
+            return str;
         }
 
         string GetSecondMailFromAccount(string Account)
@@ -397,7 +475,6 @@ namespace pdfScanner
             if (Account != null && Account != "" && Account != "-1")
             {
                 object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
-
                 for (int i = 1; i <= str.GetLength(0); i++)
                 {
                     if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
@@ -630,7 +707,7 @@ namespace pdfScanner
                     DeleteFile(filename + ".pdf");
                     try
                     {
-                        SendMail(EMAIL, filename);
+                        SendMail(EMAIL, filename, REGULAR);
                         if (ToPrint(Account))
                         {
                             AddToNotSendFiles(numofpages, PagesNotSent, ref loc, i);
@@ -646,7 +723,7 @@ namespace pdfScanner
                     {
                         try
                         {
-                            SendMail(EMAIL, filename);
+                            SendMail(EMAIL, filename, REGULAR);
                         }
                         catch
                         {
