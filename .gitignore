@@ -3,3 +3,4 @@ packages/*
 PDFsender/bin/*
 PDFsender/obj/*
 PDFsender/Properties/*
+.vs/*

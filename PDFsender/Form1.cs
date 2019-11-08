@@ -112,7 +112,12 @@ namespace pdfScanner
                     string PSS = GetPasswordByAccount(Account);
                     string EMAIL = GetMailFromAccount(Account);
 
-                    if (PSS == null || PSS == "") PSS = "No Password";
+                    if (PSS == null || PSS == "") {
+                        PSS = "No Password";
+                    }
+                    else {
+                        PSS = string.Join("*", new string[PSS.Length]);
+                    }
                     if (EMAIL == null || EMAIL == "") EMAIL = "No Email";
 
                     string linetofile = "| " + Account + " | " + (i - numofpages).ToString() + " | " + (numofpages + 1).ToString() + " | " + EMAIL + " | " + PSS + " |";
@@ -660,6 +665,7 @@ namespace pdfScanner
 
                 CreateBigPDF(PagesNotSent, reader);
                 reader.Close();
+                RunCmdCommand("start chrome \"" + DASKTOPLOCATION + PrintName + "\"");
                 ClearExcle();
             }
             catch (Exception G)
