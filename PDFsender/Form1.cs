@@ -68,7 +68,7 @@ namespace pdfScanner
                 int numofpages = 0;
                 LoadBar.Maximum = reader.NumberOfPages;
 
-                Testfile.WriteLine("Account|StartPage|Length|Password|Email");
+                Testfile.WriteLine("|Account|StartPage|Length|Password|Email");
 
                 for (int i = 1; i <= intPageNum; i++)
                 {
@@ -89,7 +89,7 @@ namespace pdfScanner
                         PSS = "No Password";
                     }
                     else {
-                        PSS = string.Join("*", new string[PSS.Length]);
+                        PSS = string.Join("*", new string[PSS.Length + 1]);
                     }
                     if (EMAIL == null || EMAIL == "") EMAIL = "No Email";
 
