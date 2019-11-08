@@ -135,18 +135,18 @@
             // Approve_send
             // 
             this.Approve_send.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.Approve_send.Location = new System.Drawing.Point(274, 118);
+            this.Approve_send.Location = new System.Drawing.Point(150, 239);
             this.Approve_send.Name = "Approve_send";
             this.Approve_send.Size = new System.Drawing.Size(169, 52);
             this.Approve_send.TabIndex = 21;
-            this.Approve_send.Text = "OK";
+            this.Approve_send.Text = "Send";
             this.Approve_send.UseVisualStyleBackColor = true;
             this.Approve_send.Click += new System.EventHandler(this.Approve_send_Click);
             // 
             // Cencel_send
             // 
             this.Cencel_send.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.Cencel_send.Location = new System.Drawing.Point(12, 118);
+            this.Cencel_send.Location = new System.Drawing.Point(150, 88);
             this.Cencel_send.Name = "Cencel_send";
             this.Cencel_send.Size = new System.Drawing.Size(169, 52);
             this.Cencel_send.TabIndex = 22;

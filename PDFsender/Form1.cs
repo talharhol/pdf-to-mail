@@ -10,7 +10,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 namespace pdfScanner
 {
     public partial class PDFsender : Form
-    { //דף משכור אישי כנרת
+    { //משכור כנרת משפחתי
         string[] filesnames;
         string FirstPage;
         string DataBasePath = "";
@@ -20,47 +20,16 @@ namespace pdfScanner
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
         Outlook.Application app;
-        const string Subject = "דף מישכור אישי ";
-        const string Title = "שליחת דף מישכור אישי";
-        const string DBPASS = "alibaba";
+        const string Subject = "דף מישכור משפחתי ";
+        const string Title = "שליחת דף משכור משפחתי";
+        const string DBPASS = "aliaba";
         const string Seperator = "";
-        const string PrintName = @"\דף_משכור_אישי_הדפסה.pdf";
+        const string PrintName = @"\דף_משכור_משפחתי_הדפסה.pdf";
         const int AccountLine = 1;
+        const int MESSAGE = 4;
+        const int REGULAR = 0;
 
         OpenFileDialog file = new OpenFileDialog();
-
-        string SearchForAccountNumner(string page)
-        {
-            string[] words = page.Split('\n');
-            string str = "";
-            for (int j = 0; j < words.Length; j++)
-            {
-                string line = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j]));
-                if (line.Contains("רפסמ"))
-                {
-                    str = GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j + 2])));
-                    if (str.Length > 5)
-                        str = GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j + 1])));
-                    break;
-                }
-            }
-            if (str == "" || str == null)
-                return "-1";
-            return str;
-        }
-
-        string GetAccountNumber(string text)
-        {
-            string str = "";
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text[i] >= '0' && text[i] <= '9')
-                {
-                    str += text[i].ToString();
-                }
-            }
-            return str;
-        }
 
         public PDFsender()
         {
@@ -140,16 +109,68 @@ namespace pdfScanner
             RunCmdCommand("start " + DASKTOPLOCATION + @"\TESTFILE.txt");
         }
 
-        bool IsLastPage(string page)
+        private void SendToAllDB_Click(object sender, EventArgs e)
         {
-            if (Seperator == "")
+            file.Reset();
+            file.ShowDialog();
+            if (!InitRun())
             {
-                return true;
+                Enablebuttons();
+                BackToHome();
+                return;
             }
-            string[] SP = new string[] { Seperator };
-            string[] words = page.Split(SP, StringSplitOptions.None);
 
-            return words.Length > 1;
+            app = new Outlook.Application();
+            LoadBar.Maximum = int.Parse(EndOfRows.ToString());
+            Disablebuttons();
+
+            object[,] mails = xlApp.get_Range("D2", "D" + EndOfRows).Value2;
+            object[,] mails2 = xlApp.get_Range("F2", "F" + EndOfRows).Value2;
+            for (int i = 1; i <= mails.GetLength(0); i++)
+            {
+                try
+                {
+
+                    string AC = "";
+                    if (mails[i, 1] != null) AC = mails[i, 1].ToString();
+                    if (AC == null || AC == "")
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        SendMail(AC, file.FileName, 4);
+
+                        string AC2 = "";
+                        if (mails2[i, 1] != null)
+                            AC2 = mails[i, 1].ToString();
+                        if (AC2 != null && AC2 != "")
+                        {
+                            try
+                            {
+                                SendMail(AC2, (file.FileName).ToString(), MESSAGE);
+                            }
+                            catch (Exception E)
+                            {
+
+                            }
+                        }
+                    }
+                    catch (Exception t)
+                    {
+                        MessageBox.Show(t.ToString());
+                    }
+                    LoadBar.Value = i;
+                }
+                catch (Exception t)
+                {
+                    MessageBox.Show(t.ToString());
+                }
+            }
+            ClearExcle();
+            Enablebuttons();
+            BackToHome();
         }
 
         private void ChooseFile_Click(object sender, EventArgs e)
@@ -344,7 +365,7 @@ namespace pdfScanner
                 object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
                 for (int i = 1; i <= str.GetLength(0); i++)
                 {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
+                    if (int.Parse(Account) == int.Parse(str[i, 1].ToString()))
                     {
                         if (xlApp.get_Range("G" + (i + 1).ToString()).Value2 == "#")
                             return true;
@@ -356,7 +377,7 @@ namespace pdfScanner
             return false;
         }
 
-        void SendMail(string ToMail, string filename)
+        void SendMail(string ToMail, string filename, int k)
         {
             Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
             mail.To = ToMail;
@@ -367,9 +388,18 @@ namespace pdfScanner
             {
                 subname = "12/" + t.Year.ToString() + " ";
             }
+            if (k == 4)
+                subname = " ";
             mail.Subject += subname;
             mail.Subject += addtotitle1.Text;
-            mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename + "_locked.pdf");
+            if (k == 4)
+            {
+                mail.Attachments.Add((filename));
+            }
+            else
+            {
+                mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename + "_locked.pdf");
+            }
             try
             {
                 ((Outlook._MailItem)mail).Send();
@@ -380,6 +410,60 @@ namespace pdfScanner
             }
         }
 
+        bool IsLastPage(string page)
+        {
+            if (Seperator == "") {
+                return true;
+            }
+            string[] SP = new string[] {Seperator};
+            string[] words = page.Split(SP, StringSplitOptions.None);
+
+            return words.Length > 1;
+        }
+
+        string SearchForAccountNumner(string page)
+        {
+            string[] words = page.Split('\n');
+            /*
+             * helps to detect the accunt line *
+             * string str = "";
+            for (int i = 0; i < words.Length; i++)
+			{
+			    str += i.ToString() +"   " + words[i] + "\n";
+			}
+            MessageBox.Show(str);*/
+            string str = "";
+            for (int j = 0; j < words.Length; j++)
+            {
+                string line = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j]));
+                string[] SP = new string[] { "החפשמ" };
+                string[] SplittedLine = line.Split(SP, StringSplitOptions.None);
+                if (SplittedLine.Length > 1)
+                {
+                    str = GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j])));
+                    break;
+                }
+            }
+            if (str == "" || str == null)
+                return "-1";
+            return str;
+        }
+
+        string GetAccountNumber(string text)
+        {
+            string str = "";
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] >= '0' && text[i] <= '9')
+                {
+                    str += text[i].ToString();
+                }
+            }
+            if (str == null || str == "")
+                return "-1";
+            return str;
+        }
+
         string GetSecondMailFromAccount(string Account)
         {
             if (Account != null && Account != "" && Account != "-1")
@@ -387,7 +471,7 @@ namespace pdfScanner
                 object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
                 for (int i = 1; i <= str.GetLength(0); i++)
                 {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
+                    if (int.Parse(Account) == int.Parse(str[i, 1].ToString()))
                     {
                         return xlApp.get_Range("F" + (i + 1).ToString()).Value2;
                     }
@@ -405,7 +489,7 @@ namespace pdfScanner
 
                 for (int i = 1; i <= str.GetLength(0); i++)
                 {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
+                    if (int.Parse(Account) == int.Parse(str[i, 1].ToString()))
                     {
                         Double str123;
                         try
@@ -432,7 +516,7 @@ namespace pdfScanner
                 object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
                 for (int i = 1; i <= str.GetLength(0); i++)
                 {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
+                    if (int.Parse(Account) == int.Parse(str[i, 1].ToString()))
                     {
                         return xlApp.get_Range("D" + (i + 1).ToString()).Value2;
                     }
@@ -635,7 +719,7 @@ namespace pdfScanner
                     DeleteFile(filename + ".pdf");
                     try
                     {
-                        SendMail(EMAIL, filename);
+                        SendMail(EMAIL, filename, REGULAR);
                         if (ToPrint(Account))
                         {
                             AddToNotSendFiles(numofpages, PagesNotSent, ref loc, i);
@@ -651,7 +735,7 @@ namespace pdfScanner
                     {
                         try
                         {
-                            SendMail(EMAIL, filename);
+                            SendMail(EMAIL, filename, REGULAR);
                         }
                         catch
                         {
