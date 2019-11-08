@@ -1,0 +1,5 @@
+PDFsender.sln
+packages/*
+PDFsender/bin/*
+PDFsender/obj/*
+PDFsender/Properties/*
