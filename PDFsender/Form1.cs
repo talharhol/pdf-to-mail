@@ -10,7 +10,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 namespace pdfScanner
 {
     public partial class PDFsender : Form
-    { //קובץ לדוגמה
+    { //דף משכור אישי כנרת
         string[] filesnames;
         string FirstPage;
         string DataBasePath = "";
@@ -20,11 +20,11 @@ namespace pdfScanner
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
         Outlook.Application app;
-        const string Subject = "**שם לנושא המייל**";
-        const string Title = "**כותרת התוכנה**";
-        const string DBPASS = "1234";
-        const string Seperator = "**מילה או תו לסימון סוף הדף**";
-        const string PrintName = @"\שם_לקובץ ההדפסה.pdf";
+        const string Subject = "דף מישכור אישי ";
+        const string Title = "שליחת דף מישכור אישי";
+        const string DBPASS = "alibaba";
+        const string Seperator = "";
+        const string PrintName = @"\דף_משכור_אישי_הדפסה.pdf";
         const int AccountLine = 1;
 
         OpenFileDialog file = new OpenFileDialog();
@@ -32,28 +32,33 @@ namespace pdfScanner
         string SearchForAccountNumner(string page)
         {
             string[] words = page.Split('\n');
-            /*
-             * helps to detect the accunt line *
-             * string str = "";
-            for (int i = 0; i < words.Length; i++)
-			{
-			    str += i.ToString() +"   " + words[i] + "\n";
-			}
-            MessageBox.Show(str);*/
-            return GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[AccountLine])));
-
+            string str = "";
+            for (int j = 0; j < words.Length; j++)
+            {
+                string line = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j]));
+                if (line.Contains("רפסמ"))
+                {
+                    str = GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j + 2])));
+                    if (str.Length > 5)
+                        str = GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j + 1])));
+                    break;
+                }
+            }
+            if (str == "" || str == null)
+                return "-1";
+            return str;
         }
 
         string GetAccountNumber(string text)
         {
             string str = "";
-            /*
-             * 
-             * Insert Your Code Here
-             * 
-             */
-            if (str == null || str == "")
-                return "-1";
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] >= '0' && text[i] <= '9')
+                {
+                    str += text[i].ToString();
+                }
+            }
             return str;
         }
 
