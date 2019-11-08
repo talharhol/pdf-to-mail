@@ -1,0 +1,81 @@
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\PDFsender.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.ResolveComReference.cache
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\pdfScanner.PDFsender.resources
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.GenerateResource.Cache
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\itextsharp.dll
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\S22.Imap.dll
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\itextsharp.xml
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\דפית_לחבר.exe.config
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\דפית_לחבר.exe.manifest
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\דפית_לחבר.application
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\דפית_לחבר.exe
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\bin\Debug\דפית_לחבר.pdb
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\דפית_לחבר.Properties.Resources.resources
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\דפית_לחבר.exe.manifest
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\דפית_לחבר.application
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\דפית_לחבר.exe
+C:\Users\User\Desktop\אוף\PDFsender\PDFsender\obj\Debug\דפית_לחבר.pdb
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\bin\Debug\דפית_לחבר.exe.config
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.ResolveComReference.cache
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\דפית_לחבר.exe
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\דפית_לחבר.pdb
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\bin\Debug\דפית_לחבר.exe.manifest
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\bin\Debug\דפית_לחבר.application
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\bin\Debug\דפית_לחבר.exe
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\bin\Debug\דפית_לחבר.pdb
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\bin\Debug\itextsharp.xml
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\PDFsender.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\pdfScanner.PDFsender.resources
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\דפית_לחבר.Properties.Resources.resources
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.GenerateResource.Cache
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\דפית_לחבר.exe.manifest
+C:\Users\User\Desktop\עבודה\דגניה א\דפית לחבר\PDFsender\PDFsender\obj\Debug\דפית_לחבר.application
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.ResolveComReference.cache
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.exe.config
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.exe.manifest
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.application
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.exe
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.pdb
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\itextsharp.xml
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csprojResolveAssemblyReference.cache
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\pdfScanner.PDFsender.resources
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.Properties.Resources.resources
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.GenerateResource.Cache
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.exe.manifest
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.application
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.exe
+C:\Users\User\Desktop\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.pdb
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csprojAssemblyReference.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.ResolveComReference.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\pdfScanner.PDFsender.resources
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.Properties.Resources.resources
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.GenerateResource.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.CoreCompileInputs.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.exe
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.pdb
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.exe.config
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.exe.manifest
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.application
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.exe
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\בחר_שם.pdb
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\bin\Debug\itextsharp.xml
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.exe.manifest
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\בחר_שם.application
+C:\Users\tal\Documents\עבודה\פרוייקט אב\PDFsender\PDFsender\obj\Debug\PDFsender.csproj.CopyComplete
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\bin\Debug\בחר_שם.exe.config
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\bin\Debug\בחר_שם.exe.manifest
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\bin\Debug\בחר_שם.application
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\bin\Debug\בחר_שם.exe
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\bin\Debug\בחר_שם.pdb
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\bin\Debug\itextsharp.xml
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\PDFsender.csprojAssemblyReference.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\PDFsender.csproj.ResolveComReference.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\pdfScanner.PDFsender.resources
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\בחר_שם.Properties.Resources.resources
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\PDFsender.csproj.GenerateResource.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\PDFsender.csproj.CoreCompileInputs.cache
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\בחר_שם.exe.manifest
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\בחר_שם.application
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\PDFsender.csproj.CopyComplete
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\בחר_שם.exe
+C:\Users\tal\Documents\עבודה\פרוייקט אב\נסויי\PDFsender\obj\Debug\בחר_שם.pdb
