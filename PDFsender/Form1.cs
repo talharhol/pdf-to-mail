@@ -100,7 +100,7 @@ namespace pdfScanner
                 int numofpages = 0;
                 LoadBar.Maximum = reader.NumberOfPages;
 
-                Testfile.WriteLine("Account|StartPage|Length|Password|Email");
+                Testfile.WriteLine("|Account|StartPage|Length|Password|Email");
 
                 for (int i = 1; i <= intPageNum; i++)
                 {
@@ -117,7 +117,12 @@ namespace pdfScanner
                     string PSS = GetPasswordByAccount(Account);
                     string EMAIL = GetMailFromAccount(Account);
 
-                    if (PSS == null || PSS == "") PSS = "No Password";
+                    if (PSS == null || PSS == "") {
+                        PSS = "No Password";
+                    }
+                    else {
+                        PSS = string.Join("*", new string[PSS.Length + 1]);
+                    }
                     if (EMAIL == null || EMAIL == "") EMAIL = "No Email";
 
                     string linetofile = "| " + Account + " | " + (i - numofpages).ToString() + " | " + (numofpages + 1).ToString() + " | " + EMAIL + " | " + PSS + " |";
@@ -665,6 +670,7 @@ namespace pdfScanner
 
                 CreateBigPDF(PagesNotSent, reader);
                 reader.Close();
+                RunCmdCommand("start chrome \"" + DASKTOPLOCATION + PrintName + "\"");
                 ClearExcle();
             }
             catch (Exception G)
