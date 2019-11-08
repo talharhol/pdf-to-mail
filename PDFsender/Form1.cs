@@ -10,7 +10,7 @@ using Outlook = Microsoft.Office.Interop.Outlook;
 namespace pdfScanner
 {
     public partial class PDFsender : Form
-    { //קובץ לדוגמה
+    { //כנרת סידור רכב
         string[] filesnames;
         string FirstPage;
         string DataBasePath = "";
@@ -20,12 +20,12 @@ namespace pdfScanner
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
         Outlook.Application app;
-        const string Subject = "**שם לנושא המייל**";
-        const string Title = "**כותרת התוכנה**";
-        const string DBPASS = "1234";
-        const string Seperator = "**מילה או תו לסימון סוף הדף**";
-        const string PrintName = @"\שם_לקובץ ההדפסה.pdf";
-        const int AccountLine = 1;
+        const string Subject = "דוח חיוב חודשי סידור רכב ";
+        const string Title = "שליחת דוח סידור רכב";
+        const string DBPASS = "alibaba";
+        const string Seperator = "רבחל";
+        const string PrintName = @"\קובץ_להדפסה_סידור_רכב.pdf";
+        const int AccountLine = 4;
 
         OpenFileDialog file = new OpenFileDialog();
 
@@ -47,11 +47,8 @@ namespace pdfScanner
         string GetAccountNumber(string text)
         {
             string str = "";
-            /*
-             * 
-             * Insert Your Code Here
-             * 
-             */
+            string accountNumber = text.Split(' ')[1];
+            str = long.Parse(accountNumber).ToString();
             if (str == null || str == "")
                 return "-1";
             return str;
