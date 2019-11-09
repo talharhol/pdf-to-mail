@@ -261,7 +261,6 @@ namespace pdfScanner
             }
             catch
             {
-                xlApp.Quit();
                 System.Diagnostics.Process[] process = System.Diagnostics.Process.GetProcessesByName("Excel");
                 System.Diagnostics.Process temp;
                 for (int write = 0; write < process.Length; write++)
