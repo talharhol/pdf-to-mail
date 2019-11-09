@@ -261,7 +261,22 @@ namespace pdfScanner
             }
             catch
             {
-
+                xlApp.Quit();
+                System.Diagnostics.Process[] process = System.Diagnostics.Process.GetProcessesByName("Excel");
+                System.Diagnostics.Process temp;
+                for (int write = 0; write < process.Length; write++)
+                {
+                    for (int sort = 0; sort < process.Length - 1; sort++)
+                    {
+                        if (process[sort].StartTime < process[sort + 1].StartTime)
+                        {
+                            temp = process[sort + 1];
+                            process[sort + 1] = process[sort];
+                            process[sort] = temp;
+                        }
+                    }
+                }
+                process[0].Kill();
             }
 
         }
