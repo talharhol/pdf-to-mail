@@ -252,10 +252,18 @@ namespace pdfScanner
 
         void KillExcelProcess()
         {
-            xlApp.Quit();
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+            try
+            {
+                xlApp.Quit();
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
+            }
+            catch
+            {
+
+            }
+
         }
 
         void AddToNotSendFiles(int numofpages, int[] PagesNotSent, ref int loc, int CurrentPage)
