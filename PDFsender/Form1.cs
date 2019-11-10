@@ -113,12 +113,12 @@ namespace pdfScanner
                     string EMAIL = GetMailFromAccount(Account);
 
                     if (PSS == null || PSS == "") {
-                        PSS = "No Password";
+                        PSS = "";
                     }
                     else {
                         PSS = string.Join("*", new string[PSS.Length + 1]);
                     }
-                    if (EMAIL == null || EMAIL == "") EMAIL = "No Email";
+                    if (EMAIL == null || EMAIL == "") EMAIL = "";
 
                     string linetofile = "| " + Account + " | " + (i - numofpages).ToString() + " | " + (numofpages + 1).ToString() + " | " + EMAIL + " | " + PSS + " |";
                     Testfile.WriteLine(linetofile);
