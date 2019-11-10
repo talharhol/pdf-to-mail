@@ -685,7 +685,7 @@ namespace pdfScanner
 
                 CreateBigPDF(PagesNotSent, reader);
                 reader.Close();
-                if (PagesNotSent[0] == 0)
+                if (PagesNotSent[0] != 0)
                     RunCmdCommand("start chrome \"" + DASKTOPLOCATION + PrintName + "\"");
                 ClearExcle();
             }
