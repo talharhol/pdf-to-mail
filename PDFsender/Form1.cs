@@ -86,12 +86,12 @@ namespace pdfScanner
                     string EMAIL = GetMailFromAccount(Account);
 
                     if (PSS == null || PSS == "") {
-                        PSS = "No Password";
+                        PSS = "";
                     }
                     else {
                         PSS = string.Join("*", new string[PSS.Length + 1]);
                     }
-                    if (EMAIL == null || EMAIL == "") EMAIL = "No Email";
+                    if (EMAIL == null || EMAIL == "") EMAIL = "";
 
                     string linetofile = "| " + Account + " | " + (i - numofpages).ToString() + " | " + (numofpages + 1).ToString() + " | " + EMAIL + " | " + PSS + " |";
                     Testfile.WriteLine(linetofile);
@@ -384,9 +384,7 @@ namespace pdfScanner
 
         bool ToPrint(string Account)
         {
-            /*
-             * opptional function *
-             if (Account != null && Account != "" && Account != "-1")
+            if (Account != null && Account != "" && Account != "-1")
             {
                 object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
                 for (int i = 1; i <= str.GetLength(0); i++)
@@ -399,7 +397,7 @@ namespace pdfScanner
 
                 }
 
-            }*/
+            }
             return false;
         }
 
