@@ -87,12 +87,12 @@ namespace pdfScanner
                     string EMAIL = GetMailFromAccount(Account);
 
                     if (PSS == null || PSS == "") {
-                        PSS = "No Password";
+                        PSS = "";
                     }
                     else {
                         PSS = string.Join("*", new string[PSS.Length + 1]);
                     }
-                    if (EMAIL == null || EMAIL == "") EMAIL = "No Email";
+                    if (EMAIL == null || EMAIL == "") EMAIL = "";
 
                     string linetofile = "| " + Account + " | " + (i - numofpages).ToString() + " | " + (numofpages + 1).ToString() + " | " + EMAIL + " | " + PSS + " |";
                     Testfile.WriteLine(linetofile);
@@ -278,10 +278,32 @@ namespace pdfScanner
 
         void KillExcelProcess()
         {
-            xlApp.Quit();
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+            try
+            {
+                xlApp.Quit();
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkSheet);
+            }
+            catch
+            {
+                System.Diagnostics.Process[] process = System.Diagnostics.Process.GetProcessesByName("Excel");
+                System.Diagnostics.Process temp;
+                for (int write = 0; write < process.Length; write++)
+                {
+                    for (int sort = 0; sort < process.Length - 1; sort++)
+                    {
+                        if (process[sort].StartTime < process[sort + 1].StartTime)
+                        {
+                            temp = process[sort + 1];
+                            process[sort + 1] = process[sort];
+                            process[sort] = temp;
+                        }
+                    }
+                }
+                process[0].Kill();
+            }
+
         }
 
         void AddToNotSendFiles(int numofpages, int[] PagesNotSent, ref int loc, int CurrentPage)
@@ -363,9 +385,7 @@ namespace pdfScanner
 
         bool ToPrint(string Account)
         {
-            /*
-             * opptional function *
-             if (Account != null && Account != "" && Account != "-1")
+            if (Account != null && Account != "" && Account != "-1")
             {
                 object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
                 for (int i = 1; i <= str.GetLength(0); i++)
@@ -378,7 +398,7 @@ namespace pdfScanner
 
                 }
 
-            }*/
+            }
             return false;
         }
 
@@ -754,7 +774,8 @@ namespace pdfScanner
 
                 CreateBigPDF(PagesNotSent, reader);
                 reader.Close();
-                RunCmdCommand("start chrome \"" + DASKTOPLOCATION + PrintName + "\"");
+                if (PagesNotSent[0] != 0)
+                    RunCmdCommand("start chrome \"" + DASKTOPLOCATION + PrintName + "\"");
                 ClearExcle();
             }
             catch (Exception G)
