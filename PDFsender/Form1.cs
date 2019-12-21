@@ -22,7 +22,7 @@ namespace pdfScanner
         Outlook.Application app;
         const string Subject = "דף מישכור משפחתי ";
         const string Title = "שליחת דף משכור משפחתי";
-        const string DBPASS = "aliaba";
+        const string DBPASS = "alibaba";
         const string Seperator = "";
         const string PrintName = @"\דף_משכור_משפחתי_הדפסה.pdf";
         const int AccountLine = 1;
