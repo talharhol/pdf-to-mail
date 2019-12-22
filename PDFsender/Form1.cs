@@ -29,6 +29,7 @@ namespace pdfScanner
         const string PasswordRow = "E";
         const string EmailRow = "D";
         const string SecondEmailRow = "F";
+        const string PrintRow = "G";
 
 
         OpenFileDialog file = new OpenFileDialog();
@@ -365,21 +366,7 @@ namespace pdfScanner
 
         bool ToPrint(string Account)
         {
-            if (Account != null && Account != "" && Account != "-1")
-            {
-                object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
-                for (int i = 1; i <= str.GetLength(0); i++)
-                {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
-                    {
-                        if (xlApp.get_Range("G" + (i + 1).ToString()).Value2 == "#")
-                            return true;
-                    }
-
-                }
-
-            }
-            return false;
+            return GetCellByAccount(Account, PrintRow) == "#";
         }
 
         void SendMail(string ToMail, string filename)
