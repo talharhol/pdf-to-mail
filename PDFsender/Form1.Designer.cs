@@ -39,6 +39,7 @@
             this.FilePath = new System.Windows.Forms.Label();
             this.Approve_send = new System.Windows.Forms.Button();
             this.Cencel_send = new System.Windows.Forms.Button();
+            this.Print = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // D
@@ -154,11 +155,23 @@
             this.Cencel_send.UseVisualStyleBackColor = true;
             this.Cencel_send.Click += new System.EventHandler(this.Cencel_send_Click);
             // 
+            // Print
+            // 
+            this.Print.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.Print.Location = new System.Drawing.Point(12, 261);
+            this.Print.Name = "Print";
+            this.Print.Size = new System.Drawing.Size(66, 30);
+            this.Print.TabIndex = 23;
+            this.Print.Text = "print";
+            this.Print.UseVisualStyleBackColor = true;
+            this.Print.Click += new System.EventHandler(this.Print_Click);
+            // 
             // PDFsender
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 311);
+            this.Controls.Add(this.Print);
             this.Controls.Add(this.Cencel_send);
             this.Controls.Add(this.Approve_send);
             this.Controls.Add(this.FilePath);
@@ -190,6 +203,7 @@
         private System.Windows.Forms.Label FilePath;
         private System.Windows.Forms.Button Approve_send;
         private System.Windows.Forms.Button Cencel_send;
+        private System.Windows.Forms.Button Print;
     }
 }
 

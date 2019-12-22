@@ -26,6 +26,10 @@ namespace pdfScanner
         const string Seperator = "**מילה או תו לסימון סוף הדף**";
         const string PrintName = @"\שם_לקובץ ההדפסה.pdf";
         const int AccountLine = 1;
+        const string PasswordRow = "E";
+        const string EmailRow = "D";
+        const string SecondEmailRow = "F";
+
 
         OpenFileDialog file = new OpenFileDialog();
 
@@ -109,8 +113,8 @@ namespace pdfScanner
                     }
 
                     string Account = SearchForAccountNumner(FirstPage);
-                    string PSS = GetPasswordByAccount(Account);
-                    string EMAIL = GetMailFromAccount(Account);
+                    string PSS = GetCellByAccount(Account, PasswordRow);
+                    string EMAIL = GetCellByAccount(Account, EmailRow);
 
                     if (PSS == null || PSS == "") {
                         PSS = "";
@@ -182,6 +186,8 @@ namespace pdfScanner
             this.Controls.Add(test);
             this.Controls.Add(FilePath);
             this.Controls.Add(chooseFile);
+            this.Controls.Add(Print);
+
         }
 
         void ExcelIt()
@@ -400,67 +406,25 @@ namespace pdfScanner
             }
         }
 
-        string GetSecondMailFromAccount(string Account)
+        string GetCellByAccount(string Account, string row)
         {
-            if (Account != null && Account != "" && Account != "-1")
-            {
-                object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
-                for (int i = 1; i <= str.GetLength(0); i++)
-                {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
-                    {
-                        return xlApp.get_Range("F" + (i + 1).ToString()).Value2;
-                    }
-
-                }
-            }
-            return null;
-        }
-
-        string GetPasswordByAccount(string Account)
-        {
-            if (Account != null && Account != "" && Account != "-1")
+            long account_number;
+            long account_row;
+            if (Account != null && Account != "" && Account != "-1" && long.TryParse(Account, out account_number))
             {
                 object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
 
                 for (int i = 1; i <= str.GetLength(0); i++)
                 {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
+                    if (long.TryParse(str[i, 1].ToString(), out account_row) && account_row == account_number)
                     {
-                        Double str123;
-                        try
-                        {
-                            str123 = xlApp.get_Range("E" + (i + 1).ToString()).Value2;
-                        }
-                        catch
-                        {
-                            return xlApp.get_Range("E" + (i + 1).ToString()).Value2;
-                        }
-                        return str123.ToString();
+                        return xlApp.get_Range(row + (i + 1).ToString()).Value2.ToString();
                     }
 
                 }
 
             }
-            return null;
-        }
-
-        string GetMailFromAccount(string Account)
-        {
-            if (Account != null && Account != "" && Account != "-1")
-            {
-                object[,] str = xlApp.get_Range("A2", "A" + EndOfRows).Value2;
-                for (int i = 1; i <= str.GetLength(0); i++)
-                {
-                    if (long.Parse(Account) == long.Parse(str[i, 1].ToString()))
-                    {
-                        return xlApp.get_Range("D" + (i + 1).ToString()).Value2;
-                    }
-
-                }
-
-            }
-            return null;
+            return "";
         }
 
         void CreateBigPDF(int[] PagesNotSent, PdfReader reader)
@@ -569,9 +533,9 @@ namespace pdfScanner
             startButton.Enabled = true;
             addtotitle1.ReadOnly = false;
             addtotitle1.Enabled = true;
-
             test.Enabled = true;
             chooseFile.Enabled = true;
+            Print.Enabled = true;
             LoadBar.Value = 0;
         }
 
@@ -590,6 +554,7 @@ namespace pdfScanner
             addtotitle1.Enabled = false;
             test.Enabled = false;
             chooseFile.Enabled = false;
+            Print.Enabled = false;
             DAPI.Enabled = false;
         }
 
@@ -603,6 +568,7 @@ namespace pdfScanner
             this.Controls.Add(test);
             this.Controls.Add(FilePath);
             this.Controls.Add(chooseFile);
+            this.Controls.Add(Print);
             if (!InitRun())
             {
                 Enablebuttons();
@@ -640,8 +606,8 @@ namespace pdfScanner
                     Account = SearchForAccountNumner(FirstPage);
                     string filename = FileNameCalc("File");
                     filesnames[i - 1] = filename;
-                    string PSS = GetPasswordByAccount(Account);
-                    string EMAIL = GetMailFromAccount(Account);
+                    string PSS = GetCellByAccount(Account, PasswordRow);
+                    string EMAIL = GetCellByAccount(Account, EmailRow);
 
                     if (EMAIL == null || EMAIL == "")
                     {
@@ -666,8 +632,8 @@ namespace pdfScanner
                         AddToNotSendFiles(numofpages, PagesNotSent, ref loc, i);
                     }
 
-                    EMAIL = GetSecondMailFromAccount(Account);
-                    if (EMAIL != null && EMAIL != "")
+                    EMAIL = GetCellByAccount(Account, SecondEmailRow);
+                    if (EMAIL != "")
                     {
                         try
                         {
@@ -701,6 +667,70 @@ namespace pdfScanner
 
         private void Cencel_send_Click(object sender, EventArgs e)
         {
+            Enablebuttons();
+            BackToHome();
+        }
+
+        private void Print_Click(object sender, EventArgs e)
+        {
+            if (!InitRun())
+            {
+                Enablebuttons();
+                BackToHome();
+                return;
+            }
+
+            Disablebuttons();
+
+            app = new Outlook.Application();
+            try
+            {
+                PdfReader reader = new PdfReader(file.FileName);
+                int intPageNum = reader.NumberOfPages;
+                int numofpages = 0;
+                int loc = 0;
+                int[] PagesNotSent = new int[intPageNum + 2];
+                LoadBar.Maximum = reader.NumberOfPages;
+
+                InitArray(PagesNotSent);
+
+                for (int i = 1; i <= intPageNum; i++)
+                {
+                    LoadBar.Value = i;
+                    string text = PdfTextExtractor.GetTextFromPage(reader, i, new LocationTextExtractionStrategy());
+                    FirstPage = PdfTextExtractor.GetTextFromPage(reader, i - numofpages, new LocationTextExtractionStrategy());
+                    string Account = "";
+                    if (IsLastPage(text) == false)
+                    {
+                        numofpages++;
+                        continue;
+                    }
+
+                    Account = SearchForAccountNumner(FirstPage);
+                    string EMAIL = GetMailFromAccount(Account);
+
+                    if (EMAIL == null || EMAIL == "" || ToPrint(Account))
+                    {
+                        AddToNotSendFiles(numofpages, PagesNotSent, ref loc, i);
+                        numofpages = 0;
+                        continue;
+                    }
+
+                    numofpages = 0;
+                }
+
+                CreateBigPDF(PagesNotSent, reader);
+                reader.Close();
+                if (PagesNotSent[0] != 0)
+                    RunCmdCommand("start chrome \"" + DASKTOPLOCATION + PrintName + "\"");
+                ClearExcle();
+            }
+            catch (Exception G)
+            {
+                MessageBox.Show(G.ToString());
+                ClearExcle();
+                this.Close();
+            }
             Enablebuttons();
             BackToHome();
         }
