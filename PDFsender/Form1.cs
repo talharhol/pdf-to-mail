@@ -20,11 +20,11 @@ namespace pdfScanner
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
         Outlook.Application app;
-        const string Subject = "**שם לנושא המייל**";
-        const string Title = "**כותרת התוכנה**";
-        const string DBPASS = "1234";
-        const string Seperator = "**מילה או תו לסימון סוף הדף**";
-        const string PrintName = @"\שם_לקובץ ההדפסה.pdf";
+        const string Subject = "דף מישכור משפחתי ";
+        const string Title = "שליחת דף משכור משפחתי";
+        const string DBPASS = "alibaba";
+        const string Seperator = "";
+        const string PrintName = @"\דף_משכור_משפחתי_הדפסה.pdf";
         const int AccountLine = 1;
         const string PasswordRow = "E";
         const string EmailRow = "D";
