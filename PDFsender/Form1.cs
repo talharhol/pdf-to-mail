@@ -37,26 +37,31 @@ namespace pdfScanner
         string SearchForAccountNumner(string page)
         {
             string[] words = page.Split('\n');
-            /*
-             * helps to detect the accunt line *
-             * string str = "";
-            for (int i = 0; i < words.Length; i++)
-			{
-			    str += i.ToString() +"   " + words[i] + "\n";
-			}
-            MessageBox.Show(str);*/
-            return GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[AccountLine])));
-
+            string str = "";
+            for (int j = 0; j < words.Length; j++)
+            {
+                string line = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j]));
+                if (line.Contains("החפשמ"))
+                {
+                    str = GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[j])));
+                    break;
+                }
+            }
+            if (str == "" || str == null)
+                return "-1";
+            return str;
         }
 
         string GetAccountNumber(string text)
         {
             string str = "";
-            /*
-             * 
-             * Insert Your Code Here
-             * 
-             */
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] >= '0' && text[i] <= '9')
+                {
+                    str += text[i].ToString();
+                }
+            }
             if (str == null || str == "")
                 return "-1";
             return str;
