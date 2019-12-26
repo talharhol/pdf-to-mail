@@ -699,7 +699,7 @@ namespace pdfScanner
                     }
 
                     Account = SearchForAccountNumner(FirstPage);
-                    string EMAIL = GetMailFromAccount(Account);
+                    string EMAIL = GetCellByAccount(Account, EmailRow);
 
                     if (EMAIL == null || EMAIL == "" || ToPrint(Account))
                     {
