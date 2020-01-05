@@ -405,7 +405,10 @@ namespace pdfScanner
                 {
                     if (long.TryParse(str[i, 1].ToString(), out account_row) && account_row == account_number)
                     {
-                        return xlApp.get_Range(row + (i + 1).ToString()).Value2.ToString();
+                        if (xlApp.get_Range(row + (i + 1).ToString()).Value2 != null)
+                        {
+                            return xlApp.get_Range(row + (i + 1).ToString()).Value2.ToString();
+                        }
                     }
 
                 }
