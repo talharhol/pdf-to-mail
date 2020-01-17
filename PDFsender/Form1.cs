@@ -1,73 +1,60 @@
 ﻿using System;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Outlook = Microsoft.Office.Interop.Outlook;
 using ChooseName;
 using Consts = ChooseName.Consts;
 
 
+
 namespace pdfScanner
 {
     public partial class PDFsender : Form
     { //קובץ לדוגמה
-        string FirstPage;
         Outlook.Application app;
         ChooseName.ExcelApp excel;
+        ChooseName.Account account;
         ChooseName.PdfHandler pdfHandler = null;
-
-        string SearchForAccountNumner(string page)
+        
+        string ExtractAccountNumber(int pageNumber)
         {
-            string[] words = page.Split('\n');
-            /*
-             * helps to detect the accunt line *
-             * string str = "";
-            for (int i = 0; i < words.Length; i++)
-			{
-			    str += i.ToString() +"   " + words[i] + "\n";
-			}
-            MessageBox.Show(str);*/
-            return GetAccountNumber(Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(words[Consts.AccountLine])));
-
-        }
-
-        string GetAccountNumber(string text)
-        {
-            string str = "";
-            /*
-             * 
-             * Insert Your Code Here
-             * 
-             */
-            if (str == null || str == "")
-                return "-1";
-            return str;
+            string account = "";
+            string accountText = pdfHandler.GetTextFromArea(pageNumber, Consts.AccountArea);
+            MatchCollection matches = Consts.AccountRegex.Matches(accountText);
+            if (matches.Count == 0) return "-1";
+            foreach (Match match in matches)
+            {
+                account += match.Groups["Account"].Value;
+            }
+            if (Consts.ReverseAccount)
+            {
+                char[] myArr = account.ToCharArray();
+                Array.Reverse(myArr);
+                account = new string(myArr);
+            }
+            return account;
         }
 
         bool IsLastPage(string page)
         {
-            if (Consts.Seperator == "")
-                return true;
-            return page.Contains(Consts.Seperator);
+            if (Consts.EndOfPageSeperator == "") return true;
+            return page.Contains(Consts.EndOfPageSeperator);
         }
 
         bool InitRun()
         {
             if (pdfHandler == null || !pdfHandler.IsFileValid())
             {
-                MessageBox.Show("Can't access file.");
-                Enablebuttons();
-                BackToHome();
+                MessageBox.Show("Can't access pdf file.");
                 return false;
             }
             try
             {
-                excel = new ChooseName.ExcelApp();
+                excel = new ExcelApp();
             }
             catch
             {
-                MessageBox.Show("Can't open database file");
-                Enablebuttons();
-                BackToHome();
+                MessageBox.Show("Can't open database file\n(file not exists or password error)");
                 return false;
             }
             pdfHandler.LoadPdf();
@@ -79,23 +66,13 @@ namespace pdfScanner
             Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
             mail.To = ToMail;
             mail.Subject = Consts.Subject;
-            DateTime t = DateTime.Now;
-            string subname = ((t.Month) - 1).ToString() + "/" + t.Year.ToString() + " ";
-            if (t.Month == 1)
-            {
-                subname = "12/" + (t.Year - 1).ToString() + " ";
-            }
-            mail.Subject += subname;
+            DateTime relativeMonth = DateTime.Now.AddMonths(Consts.RelativeMonth);
+            string relativeMonthString = relativeMonth.Month.ToString() + "/" + relativeMonth.Year.ToString() + " ";
+            mail.Subject += relativeMonthString;
             mail.Subject += addtotitle1.Text;
             mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename);
-            try
-            {
-                ((Outlook._MailItem)mail).Send();
-            }
-            catch (Exception Ex)
-            {
-                MessageBox.Show(Ex.ToString());
-            }
+            ((Outlook._MailItem)mail).Send();
+
         }
 
         public PDFsender()
@@ -108,7 +85,7 @@ namespace pdfScanner
         private void Start_Click(object sender, EventArgs e)
         {
             Test_Click(sender, e);
-            if (!DAPI.Enabled)
+            if (!Proceed.Enabled)
             {
                 this.Controls.Clear();
                 this.Controls.Add(Approve_send);
@@ -121,11 +98,7 @@ namespace pdfScanner
         private void Test_Click(object sender, EventArgs e)
         {
             if (!InitRun())
-            {
-                Enablebuttons();
                 return;
-            }
-
             Disablebuttons();
             System.IO.StreamWriter Testfile = new System.IO.StreamWriter(Consts.DesktopLocation + @"\TESTFILE.txt", false);
             try
@@ -137,35 +110,33 @@ namespace pdfScanner
                 for (int i = 1; i <= pdfHandler.NumerOfPages(); i++)
                 {
                     LoadBar.Value = i;
-                    string text = pdfHandler.GetTextFromPage(i);
-                    FirstPage = pdfHandler.GetTextFromPage(i - numofpages);
-                    if (!IsLastPage(text))
+                    if (!IsLastPage(pdfHandler.GetTextFromPage(i)))
                     {
                         numofpages++;
                         continue;
                     }
-
-                    string Account = SearchForAccountNumner(FirstPage);
-                    string PSS = excel.GetPassword(Account);
-                    string EMAIL = excel.GetMail(Account);
-                    PSS = string.Join("*", new string[PSS.Length + 1]);
-                    string linetofile = "| " + Account + " | " + (i - numofpages).ToString() + " | " + (numofpages + 1).ToString() + " | " + EMAIL + " | " + PSS + " |";
-                    Testfile.WriteLine(linetofile);
+                    account = new ChooseName.Account(ExtractAccountNumber(i - numofpages), excel);
+                    string EncriptedPassword = string.Join("*", new string[account.Password().Length + 1]);
+                    Testfile.WriteLine("| "
+                        + account.GetAccount() + " | "
+                        + (i - numofpages).ToString() + " | "
+                        + (numofpages + 1).ToString() + " | "
+                        + account.Mails()[0] + " | "
+                        + EncriptedPassword + " |");
                     numofpages = 0;
                 }
             }
             catch (Exception G)
             {
                 MessageBox.Show(G.ToString());
+                this.Close();
+            }
+            finally
+            {
                 excel.Close();
                 pdfHandler.Close();
                 Testfile.Dispose();
-                this.Close();
             }
-
-            Testfile.Dispose();
-            excel.Close();
-            pdfHandler.Close();
             Enablebuttons();
             RunCmdCommand("start \"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
         }
@@ -193,28 +164,16 @@ namespace pdfScanner
             this.Controls.Add(FilePath);
             this.Controls.Add(chooseFile);
             this.Controls.Add(Print);
+            this.Controls.Add(Back);
         }
 
         private void Approve_send_Click(object sender, EventArgs e)
         {
-            this.Controls.Clear();
-            this.Controls.Add(startButton);
-            this.Controls.Add(LoadBar);
-            this.Controls.Add(addtotitle1);
-            this.Controls.Add(file1);
-            this.Controls.Add(test);
-            this.Controls.Add(FilePath);
-            this.Controls.Add(chooseFile);
-            this.Controls.Add(Print);
+            LoadMain_Click(sender, e);
+
             if (!InitRun())
-            {
-                Enablebuttons();
-                BackToHome();
                 return;
-            }
-
             Disablebuttons();
-
             app = new Outlook.Application();
             try
             {
@@ -225,66 +184,40 @@ namespace pdfScanner
                 for (int i = 1; i <= pdfHandler.NumerOfPages(); i++)
                 {
                     LoadBar.Value = i;
-                    string text = pdfHandler.GetTextFromPage(i);
-                    FirstPage = pdfHandler.GetTextFromPage(i - numofpages);
-                    string Account = "";
-                    if (IsLastPage(text) == false)
+                    bool SentMail = false;
+                    if (!IsLastPage(pdfHandler.GetTextFromPage(i)))
                     {
                         numofpages++;
                         continue;
                     }
-
-                    Account = SearchForAccountNumner(FirstPage);
-                    string PSS = excel.GetPassword(Account);
-                    string EMAIL = excel.GetMail(Account);
-
-                    if (EMAIL == null || EMAIL == "")
-                    {
-                        pdfHandler.AddPagesToPrint(i - numofpages, numofpages);
-                        numofpages = 0;
-                        continue;
-                    }
-                    filename = pdfHandler.Slice(i - numofpages, numofpages, PSS);
-                    try
-                    {
-                        SendMail(EMAIL, filename);
-                        if (excel.GetPrint(Account))
-                        {
-                            pdfHandler.AddPagesToPrint(i - numofpages, numofpages);
-                        }
-                    }
-                    catch
-                    {
-                        pdfHandler.AddPagesToPrint(i - numofpages, numofpages);
-                    }
-
-                    EMAIL = excel.GetSecondMail(Account);
-                    if (EMAIL != "")
+                    account = new ChooseName.Account(ExtractAccountNumber(i - numofpages), excel);
+                    foreach (string mail in account.Mails())
                     {
                         try
                         {
-                            SendMail(EMAIL, filename);
+                            SendMail(mail, filename);
+                            SentMail = true;
                         }
-                        catch
-                        {
-
-                        }
+                        catch { }
                     }
+                    if (!SentMail || account.Print())
+                        pdfHandler.AddPagesToPrint(i - numofpages, numofpages);
                     numofpages = 0;
                 }
 
                 string printPath = pdfHandler.Print();
                 if (printPath != "")
                     RunCmdCommand("start chrome \"" + printPath + "\"");
-                excel.Close();
-                pdfHandler.Close();
             }
             catch (Exception G)
             {
                 MessageBox.Show(G.ToString());
+                this.Close();
+            }
+            finally
+            {
                 excel.Close();
                 pdfHandler.Close();
-                this.Close();
             }
             Enablebuttons();
             BackToHome();
@@ -299,14 +232,8 @@ namespace pdfScanner
         private void Print_Click(object sender, EventArgs e)
         {
             if (!InitRun())
-            {
-                Enablebuttons();
-                BackToHome();
                 return;
-            }
-
             Disablebuttons();
-
             app = new Outlook.Application();
             try
             {
@@ -316,36 +243,31 @@ namespace pdfScanner
                 for (int i = 1; i <= pdfHandler.NumerOfPages(); i++)
                 {
                     LoadBar.Value = i;
-                    string text = pdfHandler.GetTextFromPage(i);
-                    FirstPage = pdfHandler.GetTextFromPage(i - numofpages);
-                    string Account = "";
-                    if (!IsLastPage(text))
+                    if (!IsLastPage(pdfHandler.GetTextFromPage(i)))
                     {
                         numofpages++;
                         continue;
                     }
 
-                    Account = SearchForAccountNumner(FirstPage);
-                    string EMAIL = excel.GetMail(Account);
-
-                    if (EMAIL == null || EMAIL == "" || excel.GetPrint(Account))
+                    account = new ChooseName.Account(ExtractAccountNumber(i - numofpages), excel);
+                    if (account.Mails().Length == 0 || account.Print())
                         pdfHandler.AddPagesToPrint(i - numofpages, numofpages);
-
                     numofpages = 0;
                 }
 
                 string printPath = pdfHandler.Print();
                 if (printPath != "")
                     RunCmdCommand("start chrome \"" + printPath + "\"");
-                excel.Close();
-                pdfHandler.Close();
             }
             catch (Exception G)
             {
                 MessageBox.Show(G.ToString());
+                this.Close();
+            }
+            finally
+            {
                 excel.Close();
                 pdfHandler.Close();
-                this.Close();
             }
             Enablebuttons();
             BackToHome();
@@ -371,14 +293,15 @@ namespace pdfScanner
             chooseFile.Enabled = true;
             Print.Enabled = true;
             LoadBar.Value = 0;
+            Back.Enabled = true;
         }
 
         void BackToHome()
         {
             this.Controls.Clear();
-            this.Controls.Add(DAPI);
-            this.Controls.Add(D);
-            DAPI.Enabled = true;
+            this.Controls.Add(Proceed);
+            this.Controls.Add(DataBase);
+            Proceed.Enabled = true;
         }
 
         void Disablebuttons()
@@ -389,7 +312,13 @@ namespace pdfScanner
             test.Enabled = false;
             chooseFile.Enabled = false;
             Print.Enabled = false;
-            DAPI.Enabled = false;
+            Proceed.Enabled = false;
+            Back.Enabled = false;
+        }
+
+        private void Back_Click(object sender, EventArgs e)
+        {
+            BackToHome();
         }
     }
 }

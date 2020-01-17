@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.D = new System.Windows.Forms.Button();
-            this.DAPI = new System.Windows.Forms.Button();
+            this.DataBase = new System.Windows.Forms.Button();
+            this.Proceed = new System.Windows.Forms.Button();
             this.test = new System.Windows.Forms.Button();
             this.file1 = new System.Windows.Forms.Label();
             this.addtotitle1 = new System.Windows.Forms.TextBox();
@@ -40,29 +40,30 @@
             this.Approve_send = new System.Windows.Forms.Button();
             this.Cencel_send = new System.Windows.Forms.Button();
             this.Print = new System.Windows.Forms.Button();
+            this.Back = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // D
+            // DataBase
             // 
-            this.D.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.D.Location = new System.Drawing.Point(136, 176);
-            this.D.Name = "D";
-            this.D.Size = new System.Drawing.Size(194, 30);
-            this.D.TabIndex = 18;
-            this.D.Text = "מיקום מאגר המידע";
-            this.D.UseVisualStyleBackColor = true;
-            this.D.Click += new System.EventHandler(this.DatabasePath_Click);
+            this.DataBase.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.DataBase.Location = new System.Drawing.Point(136, 176);
+            this.DataBase.Name = "DataBase";
+            this.DataBase.Size = new System.Drawing.Size(194, 30);
+            this.DataBase.TabIndex = 18;
+            this.DataBase.Text = "מיקום מאגר המידע";
+            this.DataBase.UseVisualStyleBackColor = true;
+            this.DataBase.Click += new System.EventHandler(this.DatabasePath_Click);
             // 
-            // DAPI
+            // Proceed
             // 
-            this.DAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.DAPI.Location = new System.Drawing.Point(150, 79);
-            this.DAPI.Name = "DAPI";
-            this.DAPI.Size = new System.Drawing.Size(169, 52);
-            this.DAPI.TabIndex = 17;
-            this.DAPI.Text = "התחל";
-            this.DAPI.UseVisualStyleBackColor = true;
-            this.DAPI.Click += new System.EventHandler(this.LoadMain_Click);
+            this.Proceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.Proceed.Location = new System.Drawing.Point(150, 79);
+            this.Proceed.Name = "Proceed";
+            this.Proceed.Size = new System.Drawing.Size(169, 52);
+            this.Proceed.TabIndex = 17;
+            this.Proceed.Text = "התחל";
+            this.Proceed.UseVisualStyleBackColor = true;
+            this.Proceed.Click += new System.EventHandler(this.LoadMain_Click);
             // 
             // test
             // 
@@ -166,18 +167,30 @@
             this.Print.UseVisualStyleBackColor = true;
             this.Print.Click += new System.EventHandler(this.Print_Click);
             // 
+            // Back
+            // 
+            this.Back.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.Back.Location = new System.Drawing.Point(12, 220);
+            this.Back.Name = "Back";
+            this.Back.Size = new System.Drawing.Size(66, 30);
+            this.Back.TabIndex = 24;
+            this.Back.Text = "Back";
+            this.Back.UseVisualStyleBackColor = true;
+            this.Back.Click += new System.EventHandler(this.Back_Click);
+            // 
             // PDFsender
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 311);
+            this.Controls.Add(this.Back);
             this.Controls.Add(this.Print);
             this.Controls.Add(this.Cencel_send);
             this.Controls.Add(this.Approve_send);
             this.Controls.Add(this.FilePath);
             this.Controls.Add(this.chooseFile);
-            this.Controls.Add(this.D);
-            this.Controls.Add(this.DAPI);
+            this.Controls.Add(this.DataBase);
+            this.Controls.Add(this.Proceed);
             this.Controls.Add(this.test);
             this.Controls.Add(this.file1);
             this.Controls.Add(this.addtotitle1);
@@ -192,8 +205,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button D;
-        private System.Windows.Forms.Button DAPI;
+        private System.Windows.Forms.Button DataBase;
+        private System.Windows.Forms.Button Proceed;
         private System.Windows.Forms.Button test;
         private System.Windows.Forms.Label file1;
         private System.Windows.Forms.TextBox addtotitle1;
@@ -204,6 +217,7 @@
         private System.Windows.Forms.Button Approve_send;
         private System.Windows.Forms.Button Cencel_send;
         private System.Windows.Forms.Button Print;
+        private System.Windows.Forms.Button Back;
     }
 }
 
