@@ -138,7 +138,7 @@ namespace pdfScanner
                 Testfile.Dispose();
             }
             Enablebuttons();
-            RunCmdCommand("start \"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
+            RunCmdCommand("\"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
         }
 
         private void ChooseFile_Click(object sender, EventArgs e)

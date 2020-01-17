@@ -7,12 +7,12 @@
     <ProjectGuid>{2E219094-A7B6-4EE3-9EF1-3F0BB1A8E854}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ChooseName</RootNamespace>
-    <AssemblyName>ChooseName</AssemblyName>
+    <RootNamespace>דפי_תקציב</RootNamespace>
+    <AssemblyName>דפי_תקציב</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\User\Desktop\עבודה\דגניה א\מוכן\דפית לחבר\</PublishUrl>
+    <PublishUrl>C:\Users\tal\Documents\עבודה\כנרת\מוכן\תקציב\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
