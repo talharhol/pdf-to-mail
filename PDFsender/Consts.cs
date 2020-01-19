@@ -22,7 +22,7 @@ namespace ChooseName
         public const string EndOfPageSeperator = "**מילה או תו לסימון סוף הדף**";
         public static System.util.RectangleJ AccountArea = new System.util.RectangleJ(370, 720, 49, 26);
         public static Regex AccountRegex = new Regex(@"(?<Account>[0-9]*)", RegexOptions.Compiled);
-        public const bool ReverseAccount = true;
+        public const bool ReverseAccount = false;
         public const bool AccountIsNumber = true;
         public const int RelativeMonth = -1;
     }

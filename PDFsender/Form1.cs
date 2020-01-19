@@ -138,7 +138,7 @@ namespace pdfScanner
                 Testfile.Dispose();
             }
             Enablebuttons();
-            RunCmdCommand("start \"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
+            RunCmdCommand("\"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
         }
 
         private void ChooseFile_Click(object sender, EventArgs e)
@@ -257,7 +257,7 @@ namespace pdfScanner
 
                 string printPath = pdfHandler.Print();
                 if (printPath != "")
-                    RunCmdCommand("start chrome \"" + printPath + "\"");
+                    RunCmdCommand("\"" + printPath + "\"");
             }
             catch (Exception G)
             {
