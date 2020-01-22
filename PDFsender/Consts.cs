@@ -9,6 +9,7 @@ namespace ChooseName
     class Consts
     {
         public const string PasswordRow = "E";
+        public const string EmptyAccount = "-1";
         public const string AccountRow = "A";
         public const string EmailRow = "D";
         public const string SecondEmailRow = "F";

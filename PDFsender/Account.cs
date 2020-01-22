@@ -29,7 +29,7 @@ namespace ChooseName
                 if (!long.TryParse(account, out accountNumber)) return false;
                 account = accountNumber.ToString();
             }
-            return this.account == account;
+            return this.account == account && this.account != Consts.EmptyAccount;
         }
         public string[] Mails()
         {
@@ -44,7 +44,7 @@ namespace ChooseName
         {
             return excel.GetPassword(this);
         }
-        public bool Print()
+        public bool IsPrint()
         {
             return excel.GetPrint(this);
         }

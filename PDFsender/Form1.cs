@@ -21,7 +21,7 @@ namespace pdfScanner
             string account = "";
             string accountText = pdfHandler.GetTextFromArea(pageNumber, Consts.AccountArea);
             MatchCollection matches = Consts.AccountRegex.Matches(accountText);
-            if (matches.Count == 0) return "-1";
+            if (matches.Count == 0) return Consts.EmptyAccount;
             foreach (Match match in matches)
             {
                 account += match.Groups["Account"].Value;
@@ -117,11 +117,12 @@ namespace pdfScanner
                     }
                     account = new ChooseName.Account(ExtractAccountNumber(i - numofpages), excel);
                     string EncriptedPassword = string.Join("*", new string[account.Password().Length + 1]);
+                    string AccountMail = account.Mails().Length > 0 ? account.Mails()[0] : "";
                     Testfile.WriteLine("| "
                         + account.GetAccount() + " | "
                         + (i - numofpages).ToString() + " | "
                         + (numofpages + 1).ToString() + " | "
-                        + account.Mails()[0] + " | "
+                        + AccountMail + " | "
                         + EncriptedPassword + " |");
                     numofpages = 0;
                 }
@@ -200,14 +201,14 @@ namespace pdfScanner
                         }
                         catch { }
                     }
-                    if (!SentMail || account.Print())
+                    if (!SentMail || account.IsPrint())
                         pdfHandler.AddPagesToPrint(i - numofpages, numofpages);
                     numofpages = 0;
                 }
 
                 string printPath = pdfHandler.Print();
                 if (printPath != "")
-                    RunCmdCommand("start chrome \"" + printPath + "\"");
+                    RunCmdCommand("\"" + printPath + "\"");
             }
             catch (Exception G)
             {
@@ -250,7 +251,7 @@ namespace pdfScanner
                     }
 
                     account = new ChooseName.Account(ExtractAccountNumber(i - numofpages), excel);
-                    if (account.Mails().Length == 0 || account.Print())
+                    if (account.Mails().Length == 0 || account.IsPrint())
                         pdfHandler.AddPagesToPrint(i - numofpages, numofpages);
                     numofpages = 0;
                 }
