@@ -41,6 +41,7 @@
             this.Cencel_send = new System.Windows.Forms.Button();
             this.Print = new System.Windows.Forms.Button();
             this.Back = new System.Windows.Forms.Button();
+            this.draftClick = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // DataBase
@@ -68,7 +69,7 @@
             // test
             // 
             this.test.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.test.Location = new System.Drawing.Point(392, 261);
+            this.test.Location = new System.Drawing.Point(393, 220);
             this.test.Name = "test";
             this.test.Size = new System.Drawing.Size(66, 30);
             this.test.TabIndex = 16;
@@ -178,11 +179,23 @@
             this.Back.UseVisualStyleBackColor = true;
             this.Back.Click += new System.EventHandler(this.Back_Click);
             // 
+            // draftClick
+            // 
+            this.draftClick.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.draftClick.Location = new System.Drawing.Point(393, 261);
+            this.draftClick.Name = "draftClick";
+            this.draftClick.Size = new System.Drawing.Size(66, 30);
+            this.draftClick.TabIndex = 25;
+            this.draftClick.Text = "draft";
+            this.draftClick.UseVisualStyleBackColor = true;
+            this.draftClick.Click += new System.EventHandler(this.DraftClick_Click);
+            // 
             // PDFsender
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(471, 311);
+            this.Controls.Add(this.draftClick);
             this.Controls.Add(this.Back);
             this.Controls.Add(this.Print);
             this.Controls.Add(this.Cencel_send);
@@ -218,6 +231,7 @@
         private System.Windows.Forms.Button Cencel_send;
         private System.Windows.Forms.Button Print;
         private System.Windows.Forms.Button Back;
+        private System.Windows.Forms.Button draftClick;
     }
 }
 

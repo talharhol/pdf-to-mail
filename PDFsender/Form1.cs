@@ -72,7 +72,18 @@ namespace pdfScanner
             mail.Subject += addtotitle1.Text;
             mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename);
             ((Outlook._MailItem)mail).Send();
+        }
 
+        void CreateDraftMail(string ToMail, string filename)
+        {
+            Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
+            mail.To = ToMail;
+            mail.Subject = Consts.Subject;
+            DateTime relativeMonth = DateTime.Now.AddMonths(Consts.RelativeMonth);
+            string relativeMonthString = relativeMonth.Month.ToString() + "/" + relativeMonth.Year.ToString() + " ";
+            mail.Subject += relativeMonthString;
+            mail.Subject += addtotitle1.Text;
+            ((Outlook._MailItem)mail).Save();
         }
 
         public PDFsender()
@@ -156,6 +167,10 @@ namespace pdfScanner
 
         private void LoadMain_Click(object sender, EventArgs e)
         {
+            GoToMainPage();
+        }
+        private void GoToMainPage()
+        {
             this.Controls.Clear();
             this.Controls.Add(startButton);
             this.Controls.Add(LoadBar);
@@ -166,11 +181,12 @@ namespace pdfScanner
             this.Controls.Add(chooseFile);
             this.Controls.Add(Print);
             this.Controls.Add(Back);
+            this.Controls.Add(draftClick);
         }
+        private void RunMainProgram(bool isDraft = false)
 
-        private void Approve_send_Click(object sender, EventArgs e)
         {
-            LoadMain_Click(sender, e);
+            GoToMainPage();
 
             if (!InitRun())
                 return;
@@ -196,7 +212,14 @@ namespace pdfScanner
                     {
                         try
                         {
-                            SendMail(mail, filename);
+                            if (isDraft)
+                            {
+                                CreateDraftMail(mail, filename);
+                            }
+                            else
+                            {
+                                SendMail(mail, filename);
+                            }
                             SentMail = true;
                         }
                         catch { }
@@ -222,6 +245,10 @@ namespace pdfScanner
             }
             Enablebuttons();
             BackToHome();
+        }
+
+        private void Approve_send_Click(object sender, EventArgs e) {
+            RunMainProgram();
         }
 
         private void Cencel_send_Click(object sender, EventArgs e)
@@ -295,6 +322,7 @@ namespace pdfScanner
             Print.Enabled = true;
             LoadBar.Value = 0;
             Back.Enabled = true;
+            draftClick.Enabled = true;
         }
 
         void BackToHome()
@@ -315,11 +343,17 @@ namespace pdfScanner
             Print.Enabled = false;
             Proceed.Enabled = false;
             Back.Enabled = false;
+            draftClick.Enabled = false;
         }
 
         private void Back_Click(object sender, EventArgs e)
         {
             BackToHome();
+        }
+
+        private void DraftClick_Click(object sender, EventArgs e)
+        {
+            RunMainProgram(true);
         }
     }
 }
