@@ -3,15 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
-using Consts = ChooseName.Consts;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
-using iTextSharp.text.pdf.fonts.cmaps;
+
 
 namespace ChooseName
 {
