@@ -16,7 +16,14 @@ namespace pdfScanner
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new PDFsender());
+            try
+            {
+                Application.Run(new PDFsender());
+            }
+            catch (Exception G)
+            {
+                MessageBox.Show(G.ToString());
+            }
         }
     }
 }

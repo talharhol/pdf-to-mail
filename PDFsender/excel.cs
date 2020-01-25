@@ -12,18 +12,27 @@ namespace ChooseName
         private Excel.Workbook xlWorkBook;
         private Excel.Worksheet xlWorkSheet;
         private string numberOfRows;
+        Logger logger;
 
-        public ExcelApp()
+        public ExcelApp(Logger logger)
         {
+            this.logger = logger;
+            logger.Log("Connecting to excel");
             try
             {
                 InitExcel(GetFilePath(), Consts.ExcelPassword);
             }
             catch
             {
+                logger.Log("Cant connect to excel", true);
                 KillExcelProcess();
                 throw;
             }
+            logger.Log("Connected successfully to excel");
+        }
+
+        ~ExcelApp() {
+            Close();
         }
 
         public static string SaveFilePath()
@@ -34,10 +43,11 @@ namespace ChooseName
             file.ShowDialog();
             if (file.FileName == "" || !file.CheckFileExists)
                 return "";
-            using (FileStream fs = File.Create("DATA.txt"))
+            using (FileStream fs = File.Create(Consts.CacheFile))
             {
                 Byte[] info = new UTF8Encoding(true).GetBytes(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(file.FileName)));
                 fs.Write(info, 0, info.Length);
+                
             }
             return file.FileName;
         }
@@ -81,12 +91,9 @@ namespace ChooseName
         public void Close()
         {
             bool didntcatch = true;
-            int c = 0;
             do
             {
-                c++;
                 didntcatch = true;
-                System.Threading.Thread.Sleep(200);
                 try
                 {
                     xlWorkBook.Close(false);
@@ -94,6 +101,7 @@ namespace ChooseName
                 catch
                 {
                     didntcatch = false;
+                    System.Threading.Thread.Sleep(200);
                 }
             } while (!didntcatch);
             KillExcelProcess();
@@ -136,13 +144,14 @@ namespace ChooseName
             xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets[1];
             xlApp.Visible = false;
             numberOfRows = CalcNumberOfRows();
+            logger.AddLog("Rows: " + numberOfRows);
         }
 
         private string GetFilePath()
         {
-            if (File.Exists("DATA.txt"))
+            if (File.Exists(Consts.CacheFile))
             {
-                using (StreamReader sr = File.OpenText("DATA.txt"))
+                using (StreamReader sr = File.OpenText(Consts.CacheFile))
                 {
                     string filePath = "";
                     if ((filePath = sr.ReadLine()) != null)

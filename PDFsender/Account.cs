@@ -7,7 +7,8 @@ namespace ChooseName
     {
         private string account;
         private ExcelApp excel;
-        public Account(string account, ExcelApp excel)
+        Logger logger;
+        public Account(string account, ExcelApp excel, Logger logger)
         {
             if (Consts.AccountIsNumber)
             {
@@ -17,6 +18,8 @@ namespace ChooseName
             }
             this.account = account;
             this.excel = excel;
+            this.logger = logger;
+            logger.Log("Account: " + account);
         }
         public bool IsAccountMatch(string account)
         {

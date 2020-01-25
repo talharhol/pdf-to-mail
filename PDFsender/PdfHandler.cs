@@ -9,22 +9,34 @@ namespace ChooseName
 {
     class PdfHandler
     {
-        private OpenFileDialog file = new OpenFileDialog();
-        private PdfReader reader;
-        private int[] pagesToPrint;
+        OpenFileDialog file = new OpenFileDialog();
+        PdfReader reader = null;
+        int[] pagesToPrint;
         Queue<string> filenames = new Queue<string>();
-        private int loc = 0;
+        int loc = 0;
+        Logger logger;
 
-        public PdfHandler()
+        public PdfHandler(Logger logger)
         {
+
+            this.logger = logger;
+            logger.Log("Waiting for input");
             file.Filter = "PDF|*.pdf";
             file.ShowDialog();
+            logger.Log("selected: " + file.FileName);
+        }
+
+        ~PdfHandler()
+        {
+            Close();
         }
 
         public void LoadPdf()
         {
             if (IsFileValid())
             {
+                if (reader != null)
+                    reader.Close();
                 reader = new PdfReader(file.FileName);
                 pagesToPrint = new int[NumerOfPages()];
             }
@@ -86,6 +98,7 @@ namespace ChooseName
         {
             if (pagesToPrint[0] != 0)
             {
+                logger.Log("Printing...");
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
                 PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.PrintName, FileMode.Create));
                 document.Open();

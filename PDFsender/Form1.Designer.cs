@@ -42,6 +42,8 @@
             this.Print = new System.Windows.Forms.Button();
             this.Back = new System.Windows.Forms.Button();
             this.draftClick = new System.Windows.Forms.Button();
+            this.CloseForm = new System.Windows.Forms.Button();
+            this.logger = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // DataBase
@@ -57,6 +59,7 @@
             // 
             // Proceed
             // 
+            this.Proceed.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Proceed.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.Proceed.Location = new System.Drawing.Point(150, 79);
             this.Proceed.Name = "Proceed";
@@ -190,11 +193,44 @@
             this.draftClick.UseVisualStyleBackColor = true;
             this.draftClick.Click += new System.EventHandler(this.DraftClick_Click);
             // 
+            // CloseForm
+            // 
+            this.CloseForm.BackColor = System.Drawing.Color.Transparent;
+            this.CloseForm.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.CloseForm.FlatAppearance.BorderSize = 0;
+            this.CloseForm.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.Highlight;
+            this.CloseForm.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.CloseForm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CloseForm.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.CloseForm.ForeColor = System.Drawing.Color.Red;
+            this.CloseForm.Location = new System.Drawing.Point(451, 2);
+            this.CloseForm.Name = "CloseForm";
+            this.CloseForm.Size = new System.Drawing.Size(18, 23);
+            this.CloseForm.TabIndex = 27;
+            this.CloseForm.Text = "X";
+            this.CloseForm.UseVisualStyleBackColor = false;
+            this.CloseForm.Click += new System.EventHandler(this.CloseForm_Click);
+            // 
+            // logger
+            // 
+            this.logger.AutoSize = true;
+            this.logger.BackColor = System.Drawing.Color.Transparent;
+            this.logger.ForeColor = System.Drawing.Color.Maroon;
+            this.logger.Location = new System.Drawing.Point(0, 297);
+            this.logger.Name = "logger";
+            this.logger.Size = new System.Drawing.Size(0, 13);
+            this.logger.TabIndex = 28;
+            // 
             // PDFsender
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(471, 311);
+            this.Controls.Add(this.logger);
+            this.Controls.Add(this.CloseForm);
             this.Controls.Add(this.draftClick);
             this.Controls.Add(this.Back);
             this.Controls.Add(this.Print);
@@ -209,8 +245,15 @@
             this.Controls.Add(this.addtotitle1);
             this.Controls.Add(this.LoadBar);
             this.Controls.Add(this.startButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MaximizeBox = false;
             this.Name = "PDFsender";
+            this.Opacity = 0.9D;
+            this.ShowIcon = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Form1";
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PDFsender_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PDFsender_MouseMove);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,6 +275,8 @@
         private System.Windows.Forms.Button Print;
         private System.Windows.Forms.Button Back;
         private System.Windows.Forms.Button draftClick;
+        private System.Windows.Forms.Button CloseForm;
+        private System.Windows.Forms.Label logger;
     }
 }
 
