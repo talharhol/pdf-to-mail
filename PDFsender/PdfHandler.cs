@@ -124,7 +124,8 @@ namespace ChooseName
 
         public void Close()
         {
-            reader.Close();
+            if (reader != null)
+                reader.Close();
             do
             {
                 DeleteTempFiles();

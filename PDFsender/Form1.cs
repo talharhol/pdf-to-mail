@@ -36,7 +36,7 @@ namespace pdfScanner
                     yield return new PdfData(new Account(ExtractAccountNumber(i - numofpages), excel, logHandler), i - numofpages, numofpages);
                     numofpages = 0;
                 }
-                logHandler.Log("Finish succesfully");
+                logHandler.Log("Finished succesfully");
                 Enablebuttons();
                 BackToHome();
             }
@@ -157,13 +157,10 @@ namespace pdfScanner
         public PDFsender()
         {
             InitializeComponent();
-            System.Drawing.Drawing2D.GraphicsPath p = new System.Drawing.Drawing2D.GraphicsPath();
-            p.AddEllipse(-1, 0, CloseForm.Width, CloseForm.Height - 2);
-            CloseForm.Region = new System.Drawing.Region(p);
             this.Text = Consts.Title;
             logHandler = new Logger(logger);
             if (File.Exists(Consts.CacheFile)) {
-                logHandler.Log("You are all good to go");
+                logHandler.Log("You're good to go");
             } else {
                 logHandler.Log("Please choose database file", true);
 
@@ -186,7 +183,7 @@ namespace pdfScanner
                     pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
                 }
             }
-            string printPath = pdfHandler.Print();
+            string printPath = pdfHandler != null ? pdfHandler.Print() : "";
             if (printPath != "")
                 RunCmdCommand("\"" + printPath + "\"");
         }
@@ -199,7 +196,6 @@ namespace pdfScanner
                 this.Controls.Clear();
                 this.Controls.Add(Approve_send);
                 this.Controls.Add(Cencel_send);
-                this.Controls.Add(CloseForm);
                 this.Controls.Add(logger);
             }
             
@@ -233,14 +229,9 @@ namespace pdfScanner
         private void ChooseFile_Click(object sender, EventArgs e)
         {
             pdfHandler = new PdfHandler(logHandler);
-            if (pdfHandler.IsFileValid())
-            {
-                FilePath.Text = pdfHandler.GetFilePath();
-            }
-            else
+            if (!pdfHandler.IsFileValid())
             {
                 logHandler.Log("pdf file is invalid! please choose another one", true);
-                FilePath.Text = "לא נבחר קובץ";
             }
         }
 
@@ -308,7 +299,6 @@ namespace pdfScanner
             this.Controls.Clear();
             this.Controls.Add(Proceed);
             this.Controls.Add(DataBase);
-            this.Controls.Add(CloseForm);
             this.Controls.Add(logger);
             Proceed.Enabled = true;
         }
@@ -332,16 +322,12 @@ namespace pdfScanner
             this.Controls.Add(startButton);
             this.Controls.Add(LoadBar);
             this.Controls.Add(addtotitle1);
-            this.Controls.Add(file1);
             this.Controls.Add(test);
-            this.Controls.Add(FilePath);
             this.Controls.Add(chooseFile);
             this.Controls.Add(Print);
             this.Controls.Add(Back);
             this.Controls.Add(draftClick);
-            this.Controls.Add(CloseForm);
             this.Controls.Add(logger);
         }
-
     }
 }
