@@ -23,7 +23,7 @@ namespace ChooseName
             logger.Log("Waiting for input");
             file.Filter = "PDF|*.pdf";
             file.ShowDialog();
-            logger.Log("selected: " + file.FileName);
+            logger.Log("selected: " + (file.FileName != "" ? file.FileName : "No File Selected"));
         }
 
         ~PdfHandler()

@@ -44,6 +44,9 @@ namespace pdfScanner
             this.Back = new System.Windows.Forms.Button();
             this.draftClick = new System.Windows.Forms.Button();
             this.logger = new System.Windows.Forms.Label();
+            this.logHistory = new System.Windows.Forms.Label();
+            this.LogHistoryContainer = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.LogHistoryContainer)).BeginInit();
             this.SuspendLayout();
             // 
             // DataBase
@@ -184,14 +187,37 @@ namespace pdfScanner
             // 
             // logger
             // 
-            this.logger.AutoSize = true;
             this.logger.BackColor = System.Drawing.Color.Transparent;
             this.logger.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.logger.ForeColor = System.Drawing.Color.Maroon;
             this.logger.Location = new System.Drawing.Point(0, 293);
             this.logger.Name = "logger";
-            this.logger.Size = new System.Drawing.Size(0, 16);
+            this.logger.Size = new System.Drawing.Size(472, 19);
             this.logger.TabIndex = 28;
+            this.logger.MouseLeave += new System.EventHandler(this.logger_MouseLeave);
+            this.logger.MouseHover += new System.EventHandler(this.logger_MouseHover);
+            // 
+            // logHistory
+            // 
+            this.logHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.logHistory.BackColor = System.Drawing.Color.Transparent;
+            this.logHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.logHistory.ForeColor = System.Drawing.Color.Maroon;
+            this.logHistory.Location = new System.Drawing.Point(0, 96);
+            this.logHistory.Name = "logHistory";
+            this.logHistory.Size = new System.Drawing.Size(468, 16);
+            this.logHistory.TabIndex = 29;
+            // 
+            // LogHistoryContainer
+            // 
+            this.LogHistoryContainer.BackColor = System.Drawing.Color.LemonChiffon;
+            this.LogHistoryContainer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.LogHistoryContainer.Location = new System.Drawing.Point(0, 176);
+            this.LogHistoryContainer.Margin = new System.Windows.Forms.Padding(0);
+            this.LogHistoryContainer.Name = "LogHistoryContainer";
+            this.LogHistoryContainer.Size = new System.Drawing.Size(469, 117);
+            this.LogHistoryContainer.TabIndex = 30;
+            this.LogHistoryContainer.TabStop = false;
             // 
             // PDFsender
             // 
@@ -201,6 +227,8 @@ namespace pdfScanner
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(471, 311);
+            this.Controls.Add(this.LogHistoryContainer);
+            this.Controls.Add(this.logHistory);
             this.Controls.Add(this.logger);
             this.Controls.Add(this.draftClick);
             this.Controls.Add(this.Back);
@@ -223,6 +251,7 @@ namespace pdfScanner
             this.Text = "Form1";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.PDFsender_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PDFsender_MouseMove);
+            ((System.ComponentModel.ISupportInitialize)(this.LogHistoryContainer)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -243,6 +272,8 @@ namespace pdfScanner
         private System.Windows.Forms.Button Back;
         private System.Windows.Forms.Button draftClick;
         private System.Windows.Forms.Label logger;
+        private System.Windows.Forms.Label logHistory;
+        private System.Windows.Forms.PictureBox LogHistoryContainer;
     }
 }
 

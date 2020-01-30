@@ -157,8 +157,9 @@ namespace pdfScanner
         public PDFsender()
         {
             InitializeComponent();
+            LogHistoryContainer.Controls.Add(logHistory);
             this.Text = Consts.Title;
-            logHandler = new Logger(logger);
+            logHandler = new Logger(logger, logHistory);
             if (File.Exists(Consts.CacheFile)) {
                 logHandler.Log("You're good to go");
             } else {
@@ -328,6 +329,18 @@ namespace pdfScanner
             this.Controls.Add(Back);
             this.Controls.Add(draftClick);
             this.Controls.Add(logger);
+        }
+
+        private void logger_MouseHover(object sender, EventArgs e)
+        {
+            this.Controls.Add(LogHistoryContainer);
+            LogHistoryContainer.BringToFront();
+        }
+
+        private void logger_MouseLeave(object sender, EventArgs e)
+        {
+            LogHistoryContainer.SendToBack();
+            this.Controls.Remove(LogHistoryContainer);
         }
     }
 }
