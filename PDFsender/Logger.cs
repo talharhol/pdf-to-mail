@@ -14,7 +14,7 @@ namespace ChooseName
         {
             this.logger = logger;
             this.logHistory = logHistory;
-            Log("Initiatint logger");
+            Log("Logger started");
         }
         public void Log(string message, bool error = false)
         {

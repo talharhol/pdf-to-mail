@@ -203,15 +203,16 @@ namespace pdfScanner
             this.logHistory.BackColor = System.Drawing.Color.Transparent;
             this.logHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.logHistory.ForeColor = System.Drawing.Color.Maroon;
-            this.logHistory.Location = new System.Drawing.Point(0, 96);
+            this.logHistory.Location = new System.Drawing.Point(21, 100);
             this.logHistory.Name = "logHistory";
-            this.logHistory.Size = new System.Drawing.Size(468, 16);
+            this.logHistory.Size = new System.Drawing.Size(447, 16);
             this.logHistory.TabIndex = 29;
             // 
             // LogHistoryContainer
             // 
             this.LogHistoryContainer.BackColor = System.Drawing.Color.LemonChiffon;
-            this.LogHistoryContainer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.LogHistoryContainer.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("LogHistoryContainer.BackgroundImage")));
+            this.LogHistoryContainer.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LogHistoryContainer.Location = new System.Drawing.Point(0, 176);
             this.LogHistoryContainer.Margin = new System.Windows.Forms.Padding(0);
             this.LogHistoryContainer.Name = "LogHistoryContainer";
