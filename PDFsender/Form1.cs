@@ -320,11 +320,11 @@ namespace pdfScanner
         private void GoToMainPage()
         {
             this.Controls.Clear();
+            this.Controls.Add(chooseFile);
             this.Controls.Add(startButton);
             this.Controls.Add(LoadBar);
             this.Controls.Add(addtotitle1);
             this.Controls.Add(test);
-            this.Controls.Add(chooseFile);
             this.Controls.Add(Print);
             this.Controls.Add(Back);
             this.Controls.Add(draftClick);
@@ -334,13 +334,20 @@ namespace pdfScanner
         private void logger_MouseHover(object sender, EventArgs e)
         {
             this.Controls.Add(LogHistoryContainer);
+            logger.Focus();
             LogHistoryContainer.BringToFront();
         }
 
         private void logger_MouseLeave(object sender, EventArgs e)
         {
             LogHistoryContainer.SendToBack();
+            this.Controls[0].Focus();
             this.Controls.Remove(LogHistoryContainer);
+        }
+
+        private void logger_MouseWheel(object sender, MouseEventArgs e)
+        {
+            logHistory.Location = new System.Drawing.Point(logHistory.Location.X, logHistory.Location.Y + (16 * e.Delta / 120));
         }
     }
 }

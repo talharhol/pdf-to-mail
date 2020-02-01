@@ -196,6 +196,7 @@ namespace pdfScanner
             this.logger.TabIndex = 28;
             this.logger.MouseLeave += new System.EventHandler(this.logger_MouseLeave);
             this.logger.MouseHover += new System.EventHandler(this.logger_MouseHover);
+            this.logger.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.logger_MouseWheel);
             // 
             // logHistory
             // 
