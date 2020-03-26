@@ -128,7 +128,7 @@ namespace pdfScanner
             DateTime relativeMonth = DateTime.Now.AddMonths(Consts.RelativeMonth);
             string relativeMonthString = relativeMonth.Month.ToString() + "/" + relativeMonth.Year.ToString() + " ";
             mail.Subject += relativeMonthString;
-            mail.Subject += addtotitle1.Text;
+            mail.Subject += addtotitle1.Text == "Additional text to mail subject" ? "" : addtotitle1.Text;
             mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename);
             if (draft)
             {
