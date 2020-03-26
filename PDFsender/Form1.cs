@@ -237,7 +237,9 @@ namespace pdfScanner
 
         private void DatabasePath_Click(object sender, EventArgs e)
         {
-            ChooseName.ExcelApp.SaveFilePath();
+            string path = ChooseName.ExcelApp.SaveFilePath();
+            if (!string.IsNullOrEmpty(path))
+                logHandler.Log("Saved excel path: " + path);
         }
 
         private void Cencel_send_Click(object sender, EventArgs e)
