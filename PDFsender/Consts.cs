@@ -15,7 +15,7 @@ namespace ChooseName
         public const string PrintValue = "#";
         public const string ExcelPassword = "1234";
         public static string DesktopLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        public const string PrintName = @"\PDF_To_Print_Unlocked_Heshbonit_Mas.pdf";
+        public const string PrintName = @"\Heshbonit_Mas_Print.pdf";
         public const string Subject = "חשבונית מס";
         public const string Title = "אלומות חשבונית מס";
         public const string EndOfPageSeperator = "";
