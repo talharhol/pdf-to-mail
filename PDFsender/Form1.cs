@@ -33,7 +33,6 @@ namespace pdfScanner
                 }
                 logHandler.Log("Finished succesfully");
                 Enablebuttons();
-                BackToHome();
             }
         }
 
