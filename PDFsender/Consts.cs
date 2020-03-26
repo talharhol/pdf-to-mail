@@ -17,7 +17,7 @@ namespace ChooseName
         public static string DesktopLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         public const string PrintName = @"\PDF_To_Print_Unlocked_Taktziv.pdf";
         public const string Subject = "תקציב ";
-        public const string Title = "אךומות תקציב";
+        public const string Title = "אלומות תקציב";
         public const string EndOfPageSeperator = "#";
         public static System.util.RectangleJ AccountArea = new System.util.RectangleJ((int)(5.5*72), (int)(10.9*72), (int)(0.8*72), (int)(0.5*72));
         public static Regex AccountRegex = new Regex(@"(?<Account>[0-9]*)", RegexOptions.Compiled);
