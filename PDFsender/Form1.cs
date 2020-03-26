@@ -14,7 +14,7 @@ namespace pdfScanner
         Outlook.Application app;
         ExcelApp excel;
         Logger logHandler;
-        PdfHandler pdfHandler = null;
+        FolderHandler folderHandler = null;
         System.Drawing.Point MousePoint;
 
 
@@ -23,18 +23,13 @@ namespace pdfScanner
             if (InitRun())
             {
                 Disablebuttons();
-                int numofpages = 0;
-                LoadBar.Maximum = pdfHandler.NumerOfPages();
-                for (int i = 1; i <= pdfHandler.NumerOfPages(); i++)
+                LoadBar.Maximum = folderHandler.NumerOfFiles();
+                for (int i = 0; i < folderHandler.NumerOfFiles(); i++)
                 {
-                    LoadBar.Value = i;
-                    if (!IsLastPage(pdfHandler.GetTextFromPage(i)))
-                    {
-                        numofpages++;
-                        continue;
-                    }
-                    yield return new PdfData(new Account(ExtractAccountNumber(i - numofpages), excel, logHandler), i - numofpages, numofpages);
-                    numofpages = 0;
+                    PdfHandler currentFile;
+                    currentFile = folderHandler.GetFile(i);
+                    LoadBar.Value = i + 1;
+                    yield return new PdfData(new Account(ExtractAccountNumber(currentFile), excel, logHandler), i);
                 }
                 logHandler.Log("Finished succesfully");
                 Enablebuttons();
@@ -51,9 +46,10 @@ namespace pdfScanner
             {
                 bool SentMail = false;
                 string[] mails = data.account.Mails();
+                PdfHandler currentFile = folderHandler.GetFile(data.FileNumber);
                 if (mails.Length > 0)
                 {
-                    filename = pdfHandler.Slice(data.PageNumber, data.NumberOfPages, data.account.Password());
+                    filename = currentFile.Slice(1, currentFile.NumerOfPages() / 2, data.account.Password());
                     logHandler.AddLog((isDraft ? "Draft to: " : "Mail to: ") + mails[0]);
                 }
                 foreach (string mail in mails)
@@ -67,21 +63,22 @@ namespace pdfScanner
                 }
                 if (!SentMail || data.account.IsPrint())
                 {
-                    pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
+
+                    folderHandler.AddPagesToPrint(data.FileNumber);
                     logHandler.AddLog("Print account: " + data.account.GetAccount());
                 }
             }
-            string printPath = pdfHandler.Print();
+            string printPath = folderHandler.Print();
             if (printPath != "")
                 RunCmdCommand("\"" + printPath + "\"");
         }
 
         bool InitRun()
         {
-            if (pdfHandler == null || !pdfHandler.IsFileValid())
+            if (folderHandler == null || !folderHandler.IsFolderValid())
             {
-                logHandler.Log("Can't access pdf file.", true);
-                MessageBox.Show("Can't access pdf file.");
+                logHandler.Log("Can't access pdf folder.", true);
+                MessageBox.Show("Can't access pdf folder.");
                 return false;
             }
             try
@@ -94,14 +91,14 @@ namespace pdfScanner
                 MessageBox.Show("Can't open database file\n(file not exists or password error)");
                 return false;
             }
-            pdfHandler.LoadPdf();
+            folderHandler.LoadDirectory();
             return true;
         }
 
-        string ExtractAccountNumber(int pageNumber)
+        string ExtractAccountNumber(PdfHandler pdfFile)
         {
             string account = "";
-            string accountText = pdfHandler.GetTextFromArea(pageNumber, Consts.AccountArea);
+            string accountText = pdfFile.GetTextFromArea(1, Consts.AccountArea);
             MatchCollection matches = Consts.AccountRegex.Matches(accountText);
             if (matches.Count == 0) return Consts.EmptyAccount;
             foreach (Match match in matches)
@@ -181,10 +178,10 @@ namespace pdfScanner
                 if (data.account.Mails().Length == 0 || data.account.IsPrint())
                 {
                     logHandler.AddLog("Print");
-                    pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
+                    folderHandler.AddPagesToPrint(data.FileNumber);
                 }
             }
-            string printPath = pdfHandler != null ? pdfHandler.Print() : "";
+            string printPath = folderHandler != null ? folderHandler.Print() : "";
             if (printPath != "")
                 RunCmdCommand("\"" + printPath + "\"");
         }
@@ -206,7 +203,7 @@ namespace pdfScanner
         private void Test_Click(object sender, EventArgs e)
         {
             StreamWriter Testfile = new StreamWriter(Consts.DesktopLocation + @"\TESTFILE.txt", false);
-            Testfile.WriteLine("|Account|StartPage|Length|Password|Email");
+            Testfile.WriteLine("|Account|FileNumber|Password|Email");
             bool didRun = false;
             foreach (PdfData data in GetPdfData())
             {
@@ -217,8 +214,7 @@ namespace pdfScanner
                 logHandler.AddLog(EncriptedPassword);
                 Testfile.WriteLine("| "
                     + data.account.GetAccount() + " | "
-                    + data.PageNumber.ToString() + " | "
-                    + (data.NumberOfPages + 1).ToString() + " | "
+                    + (data.FileNumber + 1).ToString() + " | "
                     + AccountMail + " | "
                     + EncriptedPassword + " |");
             }
@@ -229,8 +225,8 @@ namespace pdfScanner
 
         private void ChooseFile_Click(object sender, EventArgs e)
         {
-            pdfHandler = new PdfHandler(logHandler);
-            if (!pdfHandler.IsFileValid())
+            folderHandler = new FolderHandler(logHandler);
+            if (!folderHandler.IsFolderValid())
             {
                 logHandler.Log("pdf file is invalid! please choose another one", true);
             }

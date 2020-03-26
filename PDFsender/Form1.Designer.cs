@@ -120,7 +120,7 @@ namespace pdfScanner
             this.chooseFile.Name = "chooseFile";
             this.chooseFile.Size = new System.Drawing.Size(141, 52);
             this.chooseFile.TabIndex = 19;
-            this.chooseFile.Text = "File";
+            this.chooseFile.Text = "Folder";
             this.chooseFile.UseVisualStyleBackColor = true;
             this.chooseFile.Click += new System.EventHandler(this.ChooseFile_Click);
             // 

@@ -8,14 +8,12 @@ namespace ChooseName
 {
     class PdfData
     {
-        public int PageNumber;
-        public int NumberOfPages;
+        public int FileNumber;
         public Account account;
-        public PdfData(Account account, int pageNumber, int numberOfPages)
+        public PdfData(Account account, int fileNumber)
         {
             this.account = account;
-            PageNumber = pageNumber;
-            NumberOfPages = numberOfPages;
+            FileNumber = fileNumber;
         }
     }
 }

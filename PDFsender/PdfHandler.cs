@@ -9,21 +9,19 @@ namespace ChooseName
 {
     class PdfHandler
     {
-        OpenFileDialog file = new OpenFileDialog();
         PdfReader reader = null;
         int[] pagesToPrint;
         Queue<string> filenames = new Queue<string>();
         int loc = 0;
         Logger logger;
+        readonly string filePath = "";
 
-        public PdfHandler(Logger logger)
+        public PdfHandler(Logger logger, string filePath)
         {
 
             this.logger = logger;
-            logger.Log("Waiting for input");
-            file.Filter = "PDF|*.pdf";
-            file.ShowDialog();
-            logger.Log("selected: " + (file.FileName != "" ? file.FileName : "No File Selected"));
+            this.filePath = filePath;
+            logger.Log("current: " + filePath);
         }
 
         ~PdfHandler()
@@ -37,7 +35,7 @@ namespace ChooseName
             {
                 if (reader != null)
                     reader.Close();
-                reader = new PdfReader(file.FileName);
+                reader = new PdfReader(filePath);
                 pagesToPrint = new int[NumerOfPages()];
             }
         }
@@ -58,6 +56,11 @@ namespace ChooseName
         public string GetTextFromPage(int pageNumber)
         {
             return PdfTextExtractor.GetTextFromPage(reader, pageNumber, new LocationTextExtractionStrategy());
+        }
+
+        public PdfImportedPage GetPage(int pageNumber, PdfCopy copy)
+        {
+            return copy.GetImportedPage(reader, pageNumber);
         }
 
         public string Slice(int startPage, int length, string password)
@@ -114,12 +117,12 @@ namespace ChooseName
 
         public string GetFilePath()
         {
-            return file.FileName;
+            return filePath;
         }
 
         public bool IsFileValid()
         {
-            return file.FileName != "" && file.CheckFileExists;
+            return filePath != "" && File.Exists(filePath);
         }
 
         public void Close()

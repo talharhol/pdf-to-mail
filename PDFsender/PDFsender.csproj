@@ -92,6 +92,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PdfData.cs" />
+    <Compile Include="FolderHandler.cs" />
     <Compile Include="PdfHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
