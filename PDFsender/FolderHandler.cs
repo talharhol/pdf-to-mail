@@ -31,6 +31,7 @@ namespace ChooseName
         {
             if (IsFolderValid())
             {
+                pdfFiles.Clear();
                 foreach(string filePath in Directory.GetFiles(folder.SelectedPath, "*.pdf"))
                 {
                     PdfHandler pdfFile = new PdfHandler(logger, filePath);
@@ -65,7 +66,7 @@ namespace ChooseName
                 document.Open();
                 foreach (PdfHandler file in FilesToPrint)
                 {
-                    for(int page = 0; page < file.NumerOfPages() / 2; page++)
+                    for(int page = 1; page <= file.NumerOfPages() / 2; page++)
                     {
                         copy.AddPage(file.GetPage(page, copy));
                     }
