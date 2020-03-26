@@ -39,6 +39,7 @@ namespace ChooseName
                     reader.Close();
                 reader = new PdfReader(file.FileName);
                 pagesToPrint = new int[NumerOfPages()];
+                loc = 0;
             }
         }
 
