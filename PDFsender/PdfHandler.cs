@@ -111,6 +111,7 @@ namespace ChooseName
                     copy.AddPage(copy.GetImportedPage(reader, pagesToPrint[i]));
                 }
                 document.Close();
+                logger.Log("Printed successfully");
                 return Consts.DesktopLocation + Consts.PrintName;
             }
             return "";
