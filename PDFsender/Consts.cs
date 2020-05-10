@@ -15,9 +15,9 @@ namespace ChooseName
         public const string PrintValue = "#";
         public const string ExcelPassword = "1234";
         public static string DesktopLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        public const string PrintName = @"\Heshbonit_Mas_Print.pdf";
-        public const string Subject = "חשבונית מס";
-        public const string Title = "אלומות חשבונית מס";
+        public const string PrintName = @"\NAME.pdf";
+        public const string Subject = "SUBJECT";
+        public const string Title = "TITLE";
         public const string EndOfPageSeperator = "";
         public static System.util.RectangleJ AccountArea = new System.util.RectangleJ((int)(0.45*72), (int)(8.75*72), (int)(0.85*72), (int)(0.25*72));
         public static Regex AccountRegex = new Regex(@"(?<Account>[0-9]*)", RegexOptions.Compiled);
