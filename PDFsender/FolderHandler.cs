@@ -32,7 +32,8 @@ namespace ChooseName
             if (IsFolderValid())
             {
                 pdfFiles.Clear();
-                foreach(string filePath in Directory.GetFiles(folder.SelectedPath, "*.pdf"))
+                FilesToPrint.Clear();
+                foreach (string filePath in Directory.GetFiles(folder.SelectedPath, "*.pdf"))
                 {
                     PdfHandler pdfFile = new PdfHandler(logger, filePath);
                     pdfFile.LoadPdf();
@@ -72,6 +73,7 @@ namespace ChooseName
                     }
                 }
                 document.Close();
+                logger.Log("Printed successfully");
                 return Consts.DesktopLocation + Consts.PrintName;
             }
             return "";
