@@ -113,6 +113,7 @@ namespace pdfScanner
                 Array.Reverse(myArr);
                 account = new string(myArr);
             }
+            if (account.Length != 9 ) return Consts.EmptyAccount;
             return account;
         }
 
