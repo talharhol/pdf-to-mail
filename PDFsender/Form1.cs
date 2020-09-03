@@ -34,6 +34,7 @@ namespace pdfScanner
                         continue;
                     }
                     yield return new PdfData(new Account(ExtractAccountNumber(i - numofpages), excel, logHandler), i - numofpages, numofpages);
+                    i += numofpages + 1;
                     numofpages = 0;
                 }
                 logHandler.Log("Finished succesfully");
