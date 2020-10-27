@@ -48,7 +48,7 @@ namespace pdfScanner
                 PdfHandler currentFile = folderHandler.GetFile(data.FileNumber);
                 if (mails.Length > 0)
                 {
-                    filename = currentFile.Slice(1, (currentFile.NumerOfPages() / 2) - 1, data.account.Password());
+                    filename = currentFile.Slice(1, currentFile.NumerOfPages(), data.account.Password());
                     logHandler.AddLog((isDraft ? "Draft to: " : "Mail to: ") + mails[0]);
                 }
                 foreach (string mail in mails)

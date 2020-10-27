@@ -67,7 +67,7 @@ namespace ChooseName
                 document.Open();
                 foreach (PdfHandler file in FilesToPrint)
                 {
-                    for(int page = 1; page <= file.NumerOfPages() / 2; page++)
+                    for(int page = 1; page <= file.NumerOfPages(); page++)
                     {
                         copy.AddPage(file.GetPage(page, copy));
                     }
