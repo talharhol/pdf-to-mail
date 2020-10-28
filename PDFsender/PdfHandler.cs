@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using iTextSharp.text.pdf;
@@ -91,7 +91,7 @@ namespace ChooseName
 
         public void AddPagesToPrint(int startPage, int numberOfPages)
         {
-            for (int i = 0; i <= 0; i++)
+            for (int i = 0; i < numberOfPages; i++)
             {
                 pagesToPrint[loc] = startPage + i;
                 loc++;
