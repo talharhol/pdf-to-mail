@@ -23,7 +23,7 @@ namespace pdfScanner
             if (InitRun())
             {
                 Disablebuttons();
-                int numofpages = 0;
+                int numofpages = 1;
                 LoadBar.Maximum = pdfHandler.NumerOfPages();
                 for (int i = 1; i <= pdfHandler.NumerOfPages(); i++)
                 {
@@ -33,8 +33,8 @@ namespace pdfScanner
                         numofpages++;
                         continue;
                     }
-                    yield return new PdfData(new Account(ExtractAccountNumber(i - numofpages), excel, logHandler), i - numofpages, numofpages);
-                    numofpages = 0;
+                    yield return new PdfData(new Account(ExtractAccountNumber(i - (numofpages - 1)), excel, logHandler), i - (numofpages - 1), numofpages);
+                    numofpages = 1;
                 }
                 logHandler.Log("Finished succesfully");
                 Enablebuttons();
@@ -217,7 +217,7 @@ namespace pdfScanner
                 Testfile.WriteLine("| "
                     + data.account.GetAccount() + " | "
                     + data.PageNumber.ToString() + " | "
-                    + (data.NumberOfPages + 1).ToString() + " | "
+                    + (data.NumberOfPages).ToString() + " | "
                     + AccountMail + " | "
                     + EncriptedPassword + " |");
             }

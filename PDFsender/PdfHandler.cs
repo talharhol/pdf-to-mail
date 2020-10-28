@@ -69,7 +69,7 @@ namespace ChooseName
             iTextSharp.text.Document document = new iTextSharp.text.Document();
             PdfCopy copy = new PdfCopy(document, new FileStream(filename, FileMode.Create));
             document.Open();
-            for (int i = 0; i <= length; i++)
+            for (int i = 0; i < length; i++)
             {
                 copy.AddPage(copy.GetImportedPage(reader, startPage + i));
             }
