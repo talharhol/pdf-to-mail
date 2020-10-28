@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using iTextSharp.text.pdf;
@@ -88,7 +89,7 @@ namespace ChooseName
 
         public void AddPagesToPrint(int startPage, int numberOfPages)
         {
-            for (int i = 0; i <= 0; i++)
+            for (int i = 0; i < numberOfPages; i++)
             {
                 pagesToPrint[loc] = startPage + i;
                 loc++;
@@ -100,8 +101,9 @@ namespace ChooseName
             if (pagesToPrint[0] != 0)
             {
                 logger.Log("Printing...");
+                string filePath = Consts.DesktopLocation + string.Format(Consts.PrintName, DateTime.Now.ToString("yyyyddMMHHmm"));
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
-                PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.PrintName, FileMode.Create));
+                PdfCopy copy = new PdfCopy(document, new FileStream(filePath, FileMode.Create));
                 document.Open();
                 for (int i = 0; pagesToPrint[i] != 0; i++)
                 {
@@ -109,7 +111,7 @@ namespace ChooseName
                 }
                 document.Close();
                 logger.Log("Printed successfully");
-                return Consts.DesktopLocation + Consts.PrintName;
+                return filePath;
             }
             return "";
         }
