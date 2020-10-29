@@ -11,9 +11,8 @@ namespace ChooseName
     {
         OpenFileDialog file = new OpenFileDialog();
         PdfReader reader = null;
-        int[] pagesToPrint;
+        Queue<int> pagesToPrint = new Queue<int>();
         Queue<string> filenames = new Queue<string>();
-        int loc = 0;
         Logger logger;
 
         public PdfHandler(Logger logger)
@@ -38,8 +37,7 @@ namespace ChooseName
                 if (reader != null)
                     reader.Close();
                 reader = new PdfReader(file.FileName);
-                pagesToPrint = new int[NumerOfPages()];
-                loc = 0;
+                pagesToPrint.Clear();
             }
         }
 
@@ -90,22 +88,21 @@ namespace ChooseName
         {
             for (int i = 0; i < numberOfPages; i++)
             {
-                pagesToPrint[loc] = startPage + i;
-                loc++;
+                pagesToPrint.Enqueue(startPage + i);
             }
         }
 
         public string Print()
         {
-            if (pagesToPrint[0] != 0)
+            if (pagesToPrint.Count != 0)
             {
                 logger.Log("Printing...");
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
                 PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.PrintName, FileMode.Create));
                 document.Open();
-                for (int i = 0; pagesToPrint[i] != 0; i++)
+                for (int i = 0; i < pagesToPrint.Count; i++)
                 {
-                    copy.AddPage(copy.GetImportedPage(reader, pagesToPrint[i]));
+                    copy.AddPage(copy.GetImportedPage(reader, pagesToPrint.Dequeue()));
                 }
                 document.Close();
                 logger.Log("Printed successfully");
