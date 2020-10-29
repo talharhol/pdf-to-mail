@@ -35,7 +35,7 @@ namespace pdfScanner
                     }
                     yield return new PdfData(new Account(ExtractAccountNumber(i - (numofpages - 1)), excel, logHandler), i - (numofpages - 1), numofpages);
                     pdfHandler.AddPagesToPrint(i + 1, numofpages);
-                    i += numofpages + 1;
+                    i += numofpages;
                     numofpages = 1;
                 }
                 logHandler.Log("Finished succesfully");
