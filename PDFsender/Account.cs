@@ -8,6 +8,7 @@ namespace ChooseName
         private string account;
         private ExcelApp excel;
         Logger logger;
+        List<PdfHandler> FilesToMail = new List<PdfHandler>();
         public Account(string account, ExcelApp excel, Logger logger)
         {
             if (Consts.AccountIsNumber)
@@ -52,6 +53,29 @@ namespace ChooseName
         {
             return account;
         }
+
+        public void AddFile(PdfHandler FileToMail)
+        {
+            FilesToMail.Add(FileToMail);
+        }
         
+        public string CreateMailFile()
+        {
+            if (FilesToMail.Count > 0)
+            {
+                return FilesToMail[0].MergeFiles(FilesToMail, Password());
+            }
+            return "";
+        }
+
+        public List<PdfHandler> Files()
+        {
+            return FilesToMail;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Account && IsAccountMatch((obj as Account).GetAccount());
+        }
     }
 }

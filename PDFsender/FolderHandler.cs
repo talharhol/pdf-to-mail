@@ -52,9 +52,9 @@ namespace ChooseName
             return pdfFiles[fileNumber];
         }
 
-        public void AddPagesToPrint(int fileNumber)
+        public void AddPagesToPrint(PdfHandler File)
         {
-            FilesToPrint.Add(pdfFiles[fileNumber]);
+            FilesToPrint.Add(File);
         }
 
         public string Print()

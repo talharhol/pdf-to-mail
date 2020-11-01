@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ChooseName;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Outlook = Microsoft.Office.Interop.Outlook;
-using ChooseName;
-using System.IO;
-using System.Collections.Generic;
 
 
 namespace pdfScanner
@@ -31,8 +31,6 @@ namespace pdfScanner
                     LoadBar.Value = i + 1;
                     yield return new PdfData(new Account(ExtractAccountNumber(currentFile), excel, logHandler), i);
                 }
-                logHandler.Log("Finished succesfully");
-                Enablebuttons();
             }
         }
 
@@ -41,35 +39,69 @@ namespace pdfScanner
             GoToMainPage();
             string filename = "";
             app = new Outlook.Application();
+            List<Account> accounts = new List<Account>();
             foreach (PdfData data in GetPdfData())
             {
+                if (accounts.Contains(data.account))
+                {
+                    accounts[accounts.IndexOf(data.account)].AddFile(folderHandler.GetFile(data.FileNumber));
+                    logHandler.AddLog(string.Format("Adding File {0} to Account {1}", data.FileNumber, data.account.GetAccount()));
+                }
+                else
+                {
+                    data.account.AddFile(folderHandler.GetFile(data.FileNumber));
+                    accounts.Add(data.account);
+                    logHandler.AddLog(string.Format("Adding File {0} to Account {1}", data.FileNumber, data.account.GetAccount()));
+                }
+
+            }
+            LoadBar.Value = 0;
+            LoadBar.Maximum = accounts.Count;
+            foreach (Account account in accounts)
+            {
+                LoadBar.Value += 1;
                 bool SentMail = false;
-                string[] mails = data.account.Mails();
-                PdfHandler currentFile = folderHandler.GetFile(data.FileNumber);
+                string[] mails = account.Mails();
                 if (mails.Length > 0)
                 {
-                    filename = currentFile.Slice(1, currentFile.NumerOfPages() - 1, data.account.Password());
-                    logHandler.AddLog((isDraft ? "Draft to: " : "Mail to: ") + mails[0]);
-                }
-                foreach (string mail in mails)
-                {
-                    try
+                    filename = account.CreateMailFile();
+                    logHandler.Log((isDraft ? "Draft to: " : "Mail to: ") + mails[0]);
+                    if (filename != "")
                     {
-                        SendMail(mail, filename, isDraft);
-                        SentMail = true;
+                        foreach (string mail in mails)
+                        {
+                            try
+                            {
+                                SendMail(mail, filename, isDraft);
+                                logHandler.AddLog("Succeeded");
+                                SentMail = true;
+                            }
+                            catch {
+                                logHandler.AddLog("Failed");
+                            }
+                        }
                     }
-                    catch { }
                 }
-                if (!SentMail || data.account.IsPrint())
-                {
 
-                    folderHandler.AddPagesToPrint(data.FileNumber);
-                    logHandler.AddLog("Print account: " + data.account.GetAccount());
+                if (!SentMail || account.IsPrint())
+                {
+                    foreach (PdfHandler handler in account.Files())
+                    {
+                        folderHandler.AddPagesToPrint(handler);
+                    }
+                    logHandler.Log("Print account: " + account.GetAccount());
                 }
             }
-            string printPath = folderHandler.Print();
+            string printPath = "";
+            if (!(folderHandler is null))
+            {
+                printPath = folderHandler.Print();
+            }
+             
             if (printPath != "")
                 RunCmdCommand("\"" + printPath + "\"");
+            logHandler.Log("Finished succesfully");
+            Enablebuttons();
         }
 
         bool InitRun()
@@ -156,9 +188,12 @@ namespace pdfScanner
             LogHistoryContainer.Controls.Add(logHistory);
             this.Text = Consts.Title;
             logHandler = new Logger(logger, logHistory);
-            if (File.Exists(Consts.CacheFile)) {
+            if (File.Exists(Consts.CacheFile))
+            {
                 logHandler.Log("You're good to go");
-            } else {
+            }
+            else
+            {
                 logHandler.Log("Please choose database file", true);
 
             }
@@ -177,12 +212,14 @@ namespace pdfScanner
                 if (data.account.Mails().Length == 0 || data.account.IsPrint())
                 {
                     logHandler.AddLog("Print");
-                    folderHandler.AddPagesToPrint(data.FileNumber);
+                    folderHandler.AddPagesToPrint(folderHandler.GetFile(data.FileNumber));
                 }
             }
             string printPath = folderHandler != null ? folderHandler.Print() : "";
             if (printPath != "")
                 RunCmdCommand("\"" + printPath + "\"");
+            logHandler.Log("Finished succesfully");
+            Enablebuttons();
         }
 
         private void Start_Click(object sender, EventArgs e)
@@ -195,7 +232,6 @@ namespace pdfScanner
                 this.Controls.Add(Cencel_send);
                 this.Controls.Add(logger);
             }
-            
 
         }
 
@@ -218,8 +254,10 @@ namespace pdfScanner
                     + EncriptedPassword + " |");
             }
             Testfile.Dispose();
-            if(didRun)
+            if (didRun)
                 RunCmdCommand("\"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
+            logHandler.Log("Finished succesfully");
+            Enablebuttons();
         }
 
         private void ChooseFile_Click(object sender, EventArgs e)

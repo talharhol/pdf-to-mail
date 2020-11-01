@@ -36,7 +36,7 @@ namespace ChooseName
                 if (reader != null)
                     reader.Close();
                 reader = new PdfReader(filePath);
-                pagesToPrint = new int[NumerOfPages()];
+                pagesToPrint = new int[NumerOfPages() + 1];
                 loc = 0;
             }
         }
@@ -75,6 +75,34 @@ namespace ChooseName
             for (int i = 0; i <= length; i++)
             {
                 copy.AddPage(copy.GetImportedPage(reader, startPage + i));
+            }
+            document.Close();
+
+            using (Stream input = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (Stream output = new FileStream(locked_filename, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    PdfReader moreReader = new PdfReader(input);
+                    PdfEncryptor.Encrypt(moreReader, output, true, password, "kinneretPDF", PdfWriter.ALLOW_PRINTING);
+                }
+            }
+            return locked_filename;
+        }
+
+        public string MergeFiles(List<PdfHandler> files, string password)
+        {
+            DeleteTempFiles();
+            string filename = GetFileName();
+            string locked_filename = GetFileName("_locked");
+            iTextSharp.text.Document document = new iTextSharp.text.Document();
+            PdfCopy copy = new PdfCopy(document, new FileStream(filename, FileMode.Create));
+            document.Open();
+            foreach (PdfHandler file in files)
+            {
+                for (int page = 1; page <= file.NumerOfPages(); page++)
+                {
+                    copy.AddPage(file.GetPage(page, copy));
+                }
             }
             document.Close();
 
