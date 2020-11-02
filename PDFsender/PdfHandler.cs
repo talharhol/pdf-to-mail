@@ -100,9 +100,9 @@ namespace ChooseName
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
                 PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.PrintName, FileMode.Create));
                 document.Open();
-                for (int i = 0; i < pagesToPrint.Count; i++)
+                foreach (int i in pagesToPrint)
                 {
-                    copy.AddPage(copy.GetImportedPage(reader, pagesToPrint.Dequeue()));
+                    copy.AddPage(copy.GetImportedPage(reader, i));
                 }
                 document.Close();
                 logger.Log("Printed successfully");
