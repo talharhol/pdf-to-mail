@@ -34,7 +34,7 @@ namespace pdfScanner
                         continue;
                     }
                     yield return new PdfData(new Account(ExtractAccountNumber(i - (numofpages - 1)), excel, logHandler), i - (numofpages - 1), numofpages);
-                    pdfHandler.AddPagesToPrint(i + 1, numofpages);
+                    pdfHandler.AddPagesToPrintCopy(i + 1, numofpages);
                     i += numofpages;
                     numofpages = 1;
                 }
@@ -72,9 +72,11 @@ namespace pdfScanner
                     logHandler.AddLog("Print account: " + data.account.GetAccount());
                 }
             }
-            string printPath = pdfHandler.Print();
-            if (printPath != "")
+            List<string> printPaths = pdfHandler.Print();
+            foreach (string printPath in printPaths)
+            {
                 RunCmdCommand("\"" + printPath + "\"");
+            }
         }
 
         bool InitRun()
@@ -185,9 +187,11 @@ namespace pdfScanner
                     pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
                 }
             }
-            string printPath = pdfHandler != null ? pdfHandler.Print() : "";
-            if (printPath != "")
+            List<string> printPaths = pdfHandler != null ? pdfHandler.Print() : new List<string>();
+            foreach (string printPath in printPaths)
+            {
                 RunCmdCommand("\"" + printPath + "\"");
+            }
         }
 
         private void Start_Click(object sender, EventArgs e)

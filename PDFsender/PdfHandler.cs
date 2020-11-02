@@ -12,7 +12,8 @@ namespace ChooseName
     {
         OpenFileDialog file = new OpenFileDialog();
         PdfReader reader = null;
-        Queue<int> pagesToPrint = new Queue<int>();
+        Queue<int> pagesToPrintSource = new Queue<int>();
+        Queue<int> pagesToPrintCopy = new Queue<int>();
         Queue<string> filenames = new Queue<string>();
         Logger logger;
 
@@ -38,7 +39,8 @@ namespace ChooseName
                 if (reader != null)
                     reader.Close();
                 reader = new PdfReader(file.FileName);
-                pagesToPrint.Clear();
+                pagesToPrintSource.Clear();
+                pagesToPrintCopy.Clear();
             }
         }
 
@@ -89,22 +91,40 @@ namespace ChooseName
         {
             for (int i = 0; i < numberOfPages; i++)
             {
-                pagesToPrint.Enqueue(startPage + i);
+                pagesToPrintSource.Enqueue(startPage + i);
             }
         }
 
-        public string Print()
+        public void AddPagesToPrintCopy(int startPage, int numberOfPages)
         {
-            if (pagesToPrint.Count != 0)
+            for (int i = 0; i < numberOfPages; i++)
+            {
+                pagesToPrintCopy.Enqueue(startPage + i);
+            }
+        }
+
+        public List<string> Print()
+        {
+            string copy = this.GenerateFile(this.pagesToPrintCopy, Consts.CopyPrintName);
+            string source = this.GenerateFile(this.pagesToPrintSource, Consts.PrintName);
+            List<string> Files = new List<string>();
+            if (copy != "") Files.Add(copy);
+            if (source != "") Files.Add(source);
+            return Files;
+        }
+
+        protected string GenerateFile(Queue<int> Pages, string FileName)
+        {
+            if (Pages.Count != 0)
             {
                 logger.Log("Printing...");
-                string filePath = Consts.DesktopLocation + string.Format(Consts.PrintName, DateTime.Now.ToString("yyyyddMMHHmm"));
+                string filePath = Consts.DesktopLocation + string.Format(FileName, DateTime.Now.ToString("yyyyddMMHHmm"));
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
                 PdfCopy copy = new PdfCopy(document, new FileStream(filePath, FileMode.Create));
                 document.Open();
-                for (int i = 0; i < pagesToPrint.Count; i++)
+                foreach (int Page in Pages)
                 {
-                    copy.AddPage(copy.GetImportedPage(reader, pagesToPrint.Dequeue()));
+                    copy.AddPage(copy.GetImportedPage(reader, Page));
                 }
                 document.Close();
                 logger.Log("Printed successfully");

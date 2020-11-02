@@ -15,7 +15,8 @@ namespace ChooseName
         public const string PrintValue = "#";
         public const string ExcelPassword = "1234";
         public static string DesktopLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        public const string PrintName = @"\חיוב_חודשי_להדפסה_{0}.pdf";
+        public const string PrintName = @"\חיוב_חודשי_להדפסה_מקור_{0}.pdf";
+        public const string CopyPrintName = @"\חיוב_חודשי_להדפסה_העתק_{0}.pdf";
         public const string Subject = "חיוב חודשי מעיין ברוך ";
         public const string Title = "חיוב חודשי";
         public const string EndOfPageSeperator = "כ\"הס";
