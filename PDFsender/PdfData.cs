@@ -9,10 +9,10 @@ namespace ChooseName
     class PdfData
     {
         public int FileNumber;
-        public Account account;
-        public PdfData(Account account, int fileNumber)
+        public List<string> mails;
+        public PdfData(List<string> mails, int fileNumber)
         {
-            this.account = account;
+            this.mails = mails;
             FileNumber = fileNumber;
         }
     }

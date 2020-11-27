@@ -31,46 +31,19 @@ namespace pdfScanner
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PDFsender));
-            this.DataBase = new System.Windows.Forms.Button();
-            this.Proceed = new System.Windows.Forms.Button();
             this.test = new System.Windows.Forms.Button();
-            this.addtotitle1 = new ChooseName.PHTextBox("Additional text to mail subject");
+            this.addtotitle1 = new System.Windows.Forms.TextBox();
             this.LoadBar = new System.Windows.Forms.ProgressBar();
             this.startButton = new System.Windows.Forms.Button();
-            this.chooseFile = new System.Windows.Forms.Button();
+            this.config = new System.Windows.Forms.Button();
             this.Approve_send = new System.Windows.Forms.Button();
             this.Cencel_send = new System.Windows.Forms.Button();
-            this.Print = new System.Windows.Forms.Button();
-            this.Back = new System.Windows.Forms.Button();
             this.draftClick = new System.Windows.Forms.Button();
             this.logger = new System.Windows.Forms.Label();
             this.logHistory = new System.Windows.Forms.Label();
             this.LogHistoryContainer = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.LogHistoryContainer)).BeginInit();
             this.SuspendLayout();
-            // 
-            // DataBase
-            // 
-            this.DataBase.Font = new System.Drawing.Font("Levenim MT", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.DataBase.Location = new System.Drawing.Point(150, 176);
-            this.DataBase.Name = "DataBase";
-            this.DataBase.Size = new System.Drawing.Size(169, 30);
-            this.DataBase.TabIndex = 18;
-            this.DataBase.Text = "Excel location";
-            this.DataBase.UseVisualStyleBackColor = true;
-            this.DataBase.Click += new System.EventHandler(this.DatabasePath_Click);
-            // 
-            // Proceed
-            // 
-            this.Proceed.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Proceed.Font = new System.Drawing.Font("Levenim MT", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.Proceed.Location = new System.Drawing.Point(150, 100);
-            this.Proceed.Name = "Proceed";
-            this.Proceed.Size = new System.Drawing.Size(169, 52);
-            this.Proceed.TabIndex = 17;
-            this.Proceed.Text = "Start";
-            this.Proceed.UseVisualStyleBackColor = true;
-            this.Proceed.Click += new System.EventHandler(this.LoadMain_Click);
             // 
             // test
             // 
@@ -113,16 +86,16 @@ namespace pdfScanner
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.Start_Click);
             // 
-            // chooseFile
+            // config
             // 
-            this.chooseFile.Font = new System.Drawing.Font("Levenim MT", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.chooseFile.Location = new System.Drawing.Point(165, 118);
-            this.chooseFile.Name = "chooseFile";
-            this.chooseFile.Size = new System.Drawing.Size(141, 52);
-            this.chooseFile.TabIndex = 19;
-            this.chooseFile.Text = "Folder";
-            this.chooseFile.UseVisualStyleBackColor = true;
-            this.chooseFile.Click += new System.EventHandler(this.ChooseFile_Click);
+            this.config.Font = new System.Drawing.Font("Levenim MT", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.config.Location = new System.Drawing.Point(165, 118);
+            this.config.Name = "config";
+            this.config.Size = new System.Drawing.Size(141, 52);
+            this.config.TabIndex = 19;
+            this.config.Text = "Config";
+            this.config.UseVisualStyleBackColor = true;
+            this.config.Click += new System.EventHandler(this.config_Click);
             // 
             // Approve_send
             // 
@@ -145,34 +118,6 @@ namespace pdfScanner
             this.Cencel_send.Text = "Cancel";
             this.Cencel_send.UseVisualStyleBackColor = true;
             this.Cencel_send.Click += new System.EventHandler(this.Cencel_send_Click);
-            // 
-            // Print
-            // 
-            this.Print.BackColor = System.Drawing.Color.Transparent;
-            this.Print.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Print.BackgroundImage")));
-            this.Print.FlatAppearance.BorderSize = 0;
-            this.Print.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Print.Font = new System.Drawing.Font("Levenim MT", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.Print.Location = new System.Drawing.Point(434, 8);
-            this.Print.Name = "Print";
-            this.Print.Size = new System.Drawing.Size(27, 27);
-            this.Print.TabIndex = 23;
-            this.Print.UseVisualStyleBackColor = false;
-            this.Print.Click += new System.EventHandler(this.Print_Click);
-            // 
-            // Back
-            // 
-            this.Back.BackColor = System.Drawing.Color.Transparent;
-            this.Back.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Back.BackgroundImage")));
-            this.Back.FlatAppearance.BorderSize = 0;
-            this.Back.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Back.Font = new System.Drawing.Font("Levenim MT", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.Back.Location = new System.Drawing.Point(10, 8);
-            this.Back.Name = "Back";
-            this.Back.Size = new System.Drawing.Size(30, 30);
-            this.Back.TabIndex = 24;
-            this.Back.UseVisualStyleBackColor = false;
-            this.Back.Click += new System.EventHandler(this.Back_Click);
             // 
             // draftClick
             // 
@@ -233,13 +178,9 @@ namespace pdfScanner
             this.Controls.Add(this.logHistory);
             this.Controls.Add(this.logger);
             this.Controls.Add(this.draftClick);
-            this.Controls.Add(this.Back);
-            this.Controls.Add(this.Print);
             this.Controls.Add(this.Cencel_send);
             this.Controls.Add(this.Approve_send);
-            this.Controls.Add(this.chooseFile);
-            this.Controls.Add(this.DataBase);
-            this.Controls.Add(this.Proceed);
+            this.Controls.Add(this.config);
             this.Controls.Add(this.test);
             this.Controls.Add(this.addtotitle1);
             this.Controls.Add(this.LoadBar);
@@ -260,18 +201,13 @@ namespace pdfScanner
         }
 
         #endregion
-
-        private System.Windows.Forms.Button DataBase;
-        private System.Windows.Forms.Button Proceed;
         private System.Windows.Forms.Button test;
         private System.Windows.Forms.TextBox addtotitle1;
         private System.Windows.Forms.ProgressBar LoadBar;
         private System.Windows.Forms.Button startButton;
-        private System.Windows.Forms.Button chooseFile;
+        private System.Windows.Forms.Button config;
         private System.Windows.Forms.Button Approve_send;
         private System.Windows.Forms.Button Cencel_send;
-        private System.Windows.Forms.Button Print;
-        private System.Windows.Forms.Button Back;
         private System.Windows.Forms.Button draftClick;
         private System.Windows.Forms.Label logger;
         private System.Windows.Forms.Label logHistory;

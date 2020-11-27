@@ -12,10 +12,15 @@ namespace pdfScanner
     public partial class PDFsender : Form
     { //קובץ לדוגמה
         Outlook.Application app;
-        ExcelApp excel;
+        Form config_form = new אלומות_חשבוניות.configForm();
+        System.util.RectangleJ accountLocation;
+        Regex mailRegex;
         Logger logHandler;
         FolderHandler folderHandler = null;
+        CacheHandler cacheHandler = new CacheHandler();
+        bool succeded = false;
         System.Drawing.Point MousePoint;
+        
 
 
         private IEnumerable<PdfData> GetPdfData()
@@ -26,12 +31,11 @@ namespace pdfScanner
                 LoadBar.Maximum = folderHandler.NumerOfFiles();
                 for (int i = 0; i < folderHandler.NumerOfFiles(); i++)
                 {
-                    PdfHandler currentFile;
-                    currentFile = folderHandler.GetFile(i);
                     LoadBar.Value = i + 1;
-                    yield return new PdfData(new Account(ExtractAccountNumber(currentFile), excel, logHandler), i);
+                    yield return new PdfData(ExtractMails(folderHandler.GetFile(i)), i);
                 }
                 logHandler.Log("Finished succesfully");
+                succeded = true;
                 Enablebuttons();
             }
         }
@@ -44,11 +48,11 @@ namespace pdfScanner
             foreach (PdfData data in GetPdfData())
             {
                 bool SentMail = false;
-                string[] mails = data.account.Mails();
+                List<string> mails = data.mails;
                 PdfHandler currentFile = folderHandler.GetFile(data.FileNumber);
-                if (mails.Length > 0)
+                if (mails.Count > 0)
                 {
-                    filename = currentFile.Slice(1, currentFile.NumerOfPages(), data.account.Password());
+                    filename = currentFile.GetFilePath();
                     logHandler.AddLog((isDraft ? "Draft to: " : "Mail to: ") + mails[0]);
                 }
                 foreach (string mail in mails)
@@ -60,75 +64,52 @@ namespace pdfScanner
                     }
                     catch { }
                 }
-                if (!SentMail || data.account.IsPrint())
+                if (SentMail)
                 {
 
-                    folderHandler.AddPagesToPrint(data.FileNumber);
-                    logHandler.AddLog("Print account: " + data.account.GetAccount());
+                    folderHandler.MoveFile(data.FileNumber);
                 }
             }
-            string printPath = folderHandler.Print();
-            if (printPath != "")
-                RunCmdCommand("\"" + printPath + "\"");
         }
 
         bool InitRun()
         {
-            if (folderHandler == null || !folderHandler.IsFolderValid())
+            succeded = false;
+            if (!cacheHandler.IsConfiged())
             {
-                logHandler.Log("Can't access pdf folder.", true);
-                MessageBox.Show("Can't access pdf folder.");
-                return false;
+                config_form.Show();
             }
-            try
+            if (cacheHandler.IsConfiged())
             {
-                excel = new ExcelApp(logHandler);
+                folderHandler = new FolderHandler(logHandler, cacheHandler.GetSrc(), cacheHandler.GetDst());
+                accountLocation = new System.util.RectangleJ(
+                    cacheHandler.GetX(), cacheHandler.GetY(), 
+                    cacheHandler.GetW(), cacheHandler.GetH());
+                mailRegex = new Regex(cacheHandler.GetRegex(), RegexOptions.Compiled);
+                return folderHandler.IsFolderValid();
             }
-            catch
-            {
-                logHandler.Log("Can't open database file.", true);
-                MessageBox.Show("Can't open database file\n(file not exists or password error)");
-                return false;
-            }
-            folderHandler.LoadDirectory();
-            return true;
+            return false;
         }
 
-        string ExtractAccountNumber(PdfHandler pdfFile)
+        List<string> ExtractMails(PdfHandler pdfFile)
         {
-            string account = "";
-            string accountText = pdfFile.GetTextFromArea(1, Consts.AccountArea);
-            MatchCollection matches = Consts.AccountRegex.Matches(accountText);
-            if (matches.Count == 0) return Consts.EmptyAccount;
+            string mailText = pdfFile.GetTextFromArea(pdfFile.NumerOfPages(), accountLocation);
+            List<string> mails = new List<string>();
+            MatchCollection matches = mailRegex.Matches(mailText);
+            if (matches.Count == 0) return mails;
             foreach (Match match in matches)
             {
-                account += match.Groups["Account"].Value;
+                mails.Add(match.Groups["mail"].Value);
             }
-            if (Consts.ReverseAccount)
-            {
-                char[] myArr = account.ToCharArray();
-                Array.Reverse(myArr);
-                account = new string(myArr);
-            }
-            return account;
-        }
-
-        bool IsLastPage(string page)
-        {
-            if (Consts.EndOfPageSeperator == "") return true;
-            return page.Contains(Consts.EndOfPageSeperator);
+            return mails;
         }
 
         void SendMail(string ToMail, string filename, bool draft = false)
         {
             Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
             mail.To = ToMail;
-            mail.Subject = Consts.Subject;
-            DateTime relativeMonth = DateTime.Now.AddMonths(Consts.RelativeMonth);
-            string relativeMonthString = relativeMonth.Month.ToString() + "/" + relativeMonth.Year.ToString() + " ";
-            mail.Subject += relativeMonthString;
-            mail.Subject += addtotitle1.Text == "Additional text to mail subject" ? "" : addtotitle1.Text;
-            mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename);
+            mail.Subject = addtotitle1.Text;
+            mail.Attachments.Add(filename);
             if (draft)
             {
                 ((Outlook._MailItem)mail).Save();
@@ -153,13 +134,16 @@ namespace pdfScanner
         public PDFsender()
         {
             InitializeComponent();
+            DateTime relativeMonth = DateTime.Now.AddMonths(Consts.RelativeMonth);
+            string relativeMonthString = relativeMonth.Month.ToString() + "/" + relativeMonth.Year.ToString() + " ";
+            addtotitle1.Text = Consts.Subject + relativeMonthString;
             LogHistoryContainer.Controls.Add(logHistory);
             this.Text = Consts.Title;
             logHandler = new Logger(logger, logHistory);
             if (File.Exists(Consts.CacheFile)) {
                 logHandler.Log("You're good to go");
             } else {
-                logHandler.Log("Please choose database file", true);
+                logHandler.Log("Please config the program", true);
 
             }
             BackToHome();
@@ -170,82 +154,40 @@ namespace pdfScanner
             RunMainProgram();
         }
 
-        private void Print_Click(object sender, EventArgs e)
-        {
-            foreach (PdfData data in GetPdfData())
-            {
-                if (data.account.Mails().Length == 0 || data.account.IsPrint())
-                {
-                    logHandler.AddLog("Print");
-                    folderHandler.AddPagesToPrint(data.FileNumber);
-                }
-            }
-            string printPath = folderHandler != null ? folderHandler.Print() : "";
-            if (printPath != "")
-                RunCmdCommand("\"" + printPath + "\"");
-        }
-
         private void Start_Click(object sender, EventArgs e)
         {
             Test_Click(sender, e);
-            if (!Proceed.Enabled)
+            if (succeded)
             {
                 this.Controls.Clear();
                 this.Controls.Add(Approve_send);
                 this.Controls.Add(Cencel_send);
                 this.Controls.Add(logger);
             }
-            
-
         }
 
         private void Test_Click(object sender, EventArgs e)
         {
             StreamWriter Testfile = new StreamWriter(Consts.DesktopLocation + @"\TESTFILE.txt", false);
-            Testfile.WriteLine("|Account|FileNumber|Password|Email");
+            Testfile.WriteLine("filename | mails");
             bool didRun = false;
             foreach (PdfData data in GetPdfData())
             {
                 didRun = true;
-                string AccountMail = data.account.Mails().Length > 0 ? data.account.Mails()[0] : "";
-                logHandler.AddLog(AccountMail);
-                string EncriptedPassword = string.Join("*", new string[data.account.Password().Length + 1]);
-                logHandler.AddLog(EncriptedPassword);
-                Testfile.WriteLine("| "
-                    + data.account.GetAccount() + " | "
-                    + (data.FileNumber + 1).ToString() + " | "
-                    + AccountMail + " | "
-                    + EncriptedPassword + " |");
+                string mails = data.mails.Count > 0 ? string.Join(", ", data.mails) : "";
+                string filename = Path.GetFileName(folderHandler.GetFile(data.FileNumber).GetFilePath());
+                logHandler.AddLog(mails);
+                Testfile.WriteLine(string.Format("{0} | {1}", filename, mails));
             }
             Testfile.Dispose();
             if(didRun)
                 RunCmdCommand("\"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
         }
 
-        private void ChooseFile_Click(object sender, EventArgs e)
-        {
-            folderHandler = new FolderHandler(logHandler);
-            if (!folderHandler.IsFolderValid())
-            {
-                logHandler.Log("pdf file is invalid! please choose another one", true);
-            }
-        }
-
-        private void DatabasePath_Click(object sender, EventArgs e)
-        {
-            string path = ChooseName.ExcelApp.SaveFilePath();
-            if (!string.IsNullOrEmpty(path))
-                logHandler.Log("Saved excel path: " + path);
-        }
 
         private void Cencel_send_Click(object sender, EventArgs e)
         {
             Enablebuttons();
-            BackToHome();
-        }
-
-        private void Back_Click(object sender, EventArgs e)
-        {
             BackToHome();
         }
 
@@ -274,10 +216,6 @@ namespace pdfScanner
             }
         }
 
-        private void LoadMain_Click(object sender, EventArgs e)
-        {
-            GoToMainPage();
-        }
 
         void Enablebuttons()
         {
@@ -285,20 +223,14 @@ namespace pdfScanner
             addtotitle1.ReadOnly = false;
             addtotitle1.Enabled = true;
             test.Enabled = true;
-            chooseFile.Enabled = true;
-            Print.Enabled = true;
+            config.Enabled = true;
             LoadBar.Value = 0;
-            Back.Enabled = true;
             draftClick.Enabled = true;
         }
 
         void BackToHome()
         {
-            this.Controls.Clear();
-            this.Controls.Add(Proceed);
-            this.Controls.Add(DataBase);
-            this.Controls.Add(logger);
-            Proceed.Enabled = true;
+            this.GoToMainPage();
         }
 
         void Disablebuttons()
@@ -307,23 +239,18 @@ namespace pdfScanner
             addtotitle1.ReadOnly = true;
             addtotitle1.Enabled = false;
             test.Enabled = false;
-            chooseFile.Enabled = false;
-            Print.Enabled = false;
-            Proceed.Enabled = false;
-            Back.Enabled = false;
+            config.Enabled = false;
             draftClick.Enabled = false;
         }
 
         private void GoToMainPage()
         {
             this.Controls.Clear();
-            this.Controls.Add(chooseFile);
+            this.Controls.Add(config);
             this.Controls.Add(startButton);
             this.Controls.Add(LoadBar);
             this.Controls.Add(addtotitle1);
             this.Controls.Add(test);
-            this.Controls.Add(Print);
-            this.Controls.Add(Back);
             this.Controls.Add(draftClick);
             this.Controls.Add(logger);
         }
@@ -345,6 +272,11 @@ namespace pdfScanner
         private void logger_MouseWheel(object sender, MouseEventArgs e)
         {
             logHistory.Location = new System.Drawing.Point(logHistory.Location.X, logHistory.Location.Y + (16 * e.Delta / 120));
+        }
+
+        private void config_Click(object sender, EventArgs e)
+        {
+            config_form.Show();
         }
     }
 }

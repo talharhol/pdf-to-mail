@@ -78,9 +78,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account.cs" />
+    <Compile Include="CacheHandler.cs" />
+    <Compile Include="configForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="configForm.Designer.cs">
+      <DependentUpon>configForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Consts.cs" />
-    <Compile Include="excel.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,14 +93,14 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
-    <Compile Include="NewTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="PdfData.cs" />
     <Compile Include="FolderHandler.cs" />
     <Compile Include="PdfHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="configForm.resx">
+      <DependentUpon>configForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

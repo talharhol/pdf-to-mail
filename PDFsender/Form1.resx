@@ -118,31 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="Print.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAPNJREFUSEvt
-        1ksKwjAYBOAKIoJ6Gm+gp1JRxI2KoB5QV75Wrt2pMwEhCX+bpEnQhQMfmDR1SLG2hZA2bOEGr0BnWEAT
-        nNmD9CUhZlCZBtzhCX1OBGYALDqqUUV42bjwoUbh8T7/X2TnN4pasIYrcFFKF1gBO9QHaVFK7FCt0sG6
-        RtCBsTbHDmNRCl1geqDPG4MUuBOWTbQ5MgY5iZM5iJOx95FEnMxSJP289SL7WBmmrIgPRPGGTV20BPX3
-        wDJ9Z6kunfEXpOez0HdHdqTzxXy1KCTe58e+nAyBRQc1cmQHXBxjCs5w+xuo8yA8wRysF8iieAMzCWu0
-        0p/CLwAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="Back.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAjdJREFUWEft
-        ljtPVEEYQDdgoMCosQMbEhWJFIrg30D9LfigR21VbH1Q0FBZkEBA6az4AYJU4KPRQAL4qETPGRndbHbu
-        vbNALOQkJ9mZ/Wb27sw3893aERlcwDv4Cpfxy55+fom3sQ8PnGFcxJ8V9QGHcN8cw8e4i068gU9wBF2N
-        rj39fA2fojHGOmYCnaMlTmH8119xHE9gGcbcxW8YV8O5svCpHegEH9AtyOUSrqFzmB9ZK+GyO/Ad9tjR
-        Io59j8710I4qmDzun8s+aEeC0/gCe0MrzRV0O35g0Xx/iEvvnqc4iUto3JwdJdxDYxdCqwCz2UAzOZVw
-        Zv1rNG4Vu7EMH3gTHXPejhRjaJBHrRmd6D82xvwoW/56nqHjboVWArPVIM90Ix04i37vyTiLOdxAxxZu
-        g0tq0LnQ+ks7TqPffcKLmEvc3pXQSrCDBh0Prd+04RTan2s9zmmfv5FkGw06jAcwqe3bCq0Eb9GgxopW
-        vwWfcQBz6UfHWzmTVE3Cj9iYJ2XEJJwPrQTWc4Osas3YzzGcRMeNhlaCf34RSbyKLakpcq/i+2hs4fJH
-        YjGygFhIUlQtRpby72gxumxHFXyT8YktpWfsaBHHxnL8wI6qNL6QXMVc/Lfr6BzZLyTia1Q8lm6HJdW9
-        L8MY99xld6x3f/YrWcSnfoTun5OZyc/xOnqxeGOqnz3nfhez3TEue/Y/b4Y33ww6cRVduaIEbhnPsPXc
-        ZfVKtbDoG/SI3cTcG/KI/55a7Rdj7Myya+SfdAAAAABJRU5ErkJggg==
-</value>
-  </data>
   <data name="LogHistoryContainer.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         /9j/4AAQSkZJRgABAQEAYABgAAD/4Qu2RXhpZgAATU0AKgAAAAgABQESAAMAAAABAAEAAAExAAIAAAAm
