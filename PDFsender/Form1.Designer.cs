@@ -34,7 +34,7 @@ namespace pdfScanner
             this.DataBase = new System.Windows.Forms.Button();
             this.Proceed = new System.Windows.Forms.Button();
             this.test = new System.Windows.Forms.Button();
-            this.addtotitle1 = new ChooseName.PHTextBox("Additional text to mail subject");
+            this.addtotitle1 = new System.Windows.Forms.TextBox();
             this.LoadBar = new System.Windows.Forms.ProgressBar();
             this.startButton = new System.Windows.Forms.Button();
             this.chooseFile = new System.Windows.Forms.Button();
