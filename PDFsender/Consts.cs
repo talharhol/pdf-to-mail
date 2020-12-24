@@ -15,11 +15,11 @@ namespace ChooseName
         public const string PrintValue = "#";
         public const string ExcelPassword = "alibaba";
         public static string DesktopLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        public const string PrintName = @"\שם_לקובץ ההדפסה.pdf";
-        public const string Subject = "**שם לנושא המייל**";
-        public const string Title = "**כותרת התוכנה**";
-        public const string EndOfPageSeperator = "**מילה או תו לסימון סוף הדף**";
-        public static System.util.RectangleJ AccountArea = new System.util.RectangleJ(370, 720, 49, 26);
+        public const string PrintName = @"\משכור_שכירים_להדפסה.pdf";
+        public const string Subject = "דו\"ח משכור ";
+        public const string Title = "משכור שכירים";
+        public const string EndOfPageSeperator = "";
+        public static System.util.RectangleJ AccountArea = new System.util.RectangleJ(253, 689, 79, 12);
         public static Regex AccountRegex = new Regex(@"(?<Account>[0-9]*)", RegexOptions.Compiled);
         public const bool ReverseAccount = false;
         public const bool AccountIsNumber = true;
