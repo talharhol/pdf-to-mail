@@ -12,7 +12,8 @@ namespace ChooseName
         OpenFileDialog file = new OpenFileDialog();
         PdfReader reader = null;
         Queue<int> pagesToPrint = new Queue<int>();
-        Queue<string> filenames = new Queue<string>();
+        List<string> fileNames = new List<string>();
+        Queue<string> fileNamesToDelete = new Queue<string>();
         Logger logger;
 
         public PdfHandler(Logger logger)
@@ -61,7 +62,7 @@ namespace ChooseName
 
         public string Slice(int startPage, int length, string password)
         {
-            DeleteTempFiles();
+            DeleteFiles();
             string filename = GetFileName();
             string locked_filename = GetFileName("_locked");
             iTextSharp.text.Document document = new iTextSharp.text.Document();
@@ -81,6 +82,7 @@ namespace ChooseName
                     PdfEncryptor.Encrypt(moreReader, output, true, password, "kinneretPDF", PdfWriter.ALLOW_PRINTING);
                 }
             }
+            DeleteTempFile(filename);
             return locked_filename;
         }
 
@@ -125,31 +127,52 @@ namespace ChooseName
         {
             if (reader != null)
                 reader.Close();
+            foreach(string fileName in fileNames)
+            {
+                if (!fileNamesToDelete.Contains(fileName))
+                {
+                    fileNamesToDelete.Enqueue(fileName);
+                }
+            }
             do
             {
-                DeleteTempFiles();
+                DeleteFiles();
                 System.Threading.Thread.Sleep(200);
-            } while (filenames.Count != 0);
+            } while (fileNames.Count != 0);
         }
 
-        private void DeleteTempFiles()
+        public void DeleteTempFile(string fileName)
         {
-            string[] filenamesArry = filenames.ToArray();
-            filenames.Clear();
-            for (int i = 0; i < filenamesArry.Length; i++)
+            try
+            {
+                File.Delete(fileName);
+                fileNames.Remove(fileName);
+            }
+            catch
+            {
+                fileNamesToDelete.Enqueue(fileName);
+            }
+        }
+    
+        private void DeleteFiles()
+        {
+            string[] filenamesArry = fileNamesToDelete.ToArray();
+            fileNamesToDelete.Clear();
+            foreach (string fileName in filenamesArry)
             {
                 try
                 {
-                    File.Delete(filenamesArry[i]);
+                    File.Delete(fileName);
+                    fileNames.Remove(fileName);
                 }
                 catch
                 {
-                    filenames.Enqueue(filenamesArry[i]);
+                    fileNamesToDelete.Enqueue(fileName);
                 }
             }
         }
 
-        private string GetFileName(string appendix="")
+        private string GetFileName(string appendix = "")
         {
             int index = 0;
             string addToAppendix = "";

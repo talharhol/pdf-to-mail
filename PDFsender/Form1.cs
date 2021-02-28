@@ -43,31 +43,47 @@ namespace pdfScanner
 
         private void RunMainProgram(bool isDraft = false)
         {
+            List<string> fileNames = new List<string>();
+            Dictionary<string, List<PdfData>> mails = new Dictionary<string, List<PdfData>>();
             GoToMainPage();
-            string filename = "";
             app = new Outlook.Application();
+
             foreach (PdfData data in GetPdfData())
             {
-                bool SentMail = false;
-                string[] mails = data.account.Mails();
-                if (mails.Length > 0)
+                foreach (string mail in data.account.Mails())
                 {
-                    filename = pdfHandler.Slice(data.PageNumber, data.NumberOfPages, data.account.Password());
-                    logHandler.AddLog((isDraft ? "Draft to: " : "Mail to: ") + mails[0]);
-                }
-                foreach (string mail in mails)
-                {
-                    try
+                    if (!mails.ContainsKey(mail))
                     {
-                        SendMail(mail, filename, isDraft);
-                        SentMail = true;
+                        mails[mail] = new List<PdfData>();
                     }
-                    catch { }
+                    mails[mail].Add(data);
                 }
-                if (!SentMail || data.account.IsPrint())
+                if (data.account.Mails().Length == 0 || data.account.IsPrint())
                 {
                     pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
                     logHandler.AddLog("Print account: " + data.account.GetAccount());
+                }
+            }
+            foreach (string mail in mails.Keys)
+            {
+                foreach(PdfData data in mails[mail])
+                {
+                    fileNames.Add(pdfHandler.Slice(data.PageNumber, data.NumberOfPages, data.account.Password()));
+                }
+                try
+                {
+                    SendMail(mail, fileNames, isDraft);
+                }
+                catch
+                {
+                    foreach (PdfData data in mails[mail])
+                    {
+                        pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
+                    }
+                }
+                foreach (string fileName in fileNames)
+                {
+                    pdfHandler.DeleteTempFile(fileName);
                 }
             }
             string printPath = pdfHandler.Print();
@@ -122,12 +138,15 @@ namespace pdfScanner
             return page.Contains(Consts.EndOfPageSeperator);
         }
 
-        void SendMail(string ToMail, string filename, bool draft = false)
+        void SendMail(string ToMail, List<string> fileNames, bool draft = false)
         {
             Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
             mail.To = ToMail;
             mail.Subject = addtotitle1.Text;
-            mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename);
+            foreach(string fileName in fileNames)
+            {
+                mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + fileName);
+            }
             if (draft)
             {
                 ((Outlook._MailItem)mail).Save();
