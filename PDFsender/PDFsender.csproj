@@ -7,8 +7,8 @@
     <ProjectGuid>{2E219094-A7B6-4EE3-9EF1-3F0BB1A8E854}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>אלומות_חשבוניות</RootNamespace>
-    <AssemblyName>אלומות_חשבוניות</AssemblyName>
+    <RootNamespace>חשבונית_תושבים</RootNamespace>
+    <AssemblyName>חשבונית_תושבים</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
