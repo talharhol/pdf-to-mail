@@ -11,5 +11,6 @@ namespace ChooseName
         public const string Title = "TITLE";
         public const int RelativeMonth = -1;
         public const string CacheFile = "DATA.txt";
+        public static string DefaultRegex = @"#(?<mail>.+?@.+?)#";
     }
 }
