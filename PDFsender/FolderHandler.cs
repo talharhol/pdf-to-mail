@@ -9,7 +9,7 @@ namespace ChooseName
 {
     class FolderHandler
     {
-        List<PdfHandler> FilesToPrint = new List<PdfHandler>();
+        List<bool> FilesToPrint = new List<bool>();
         Logger logger;
         FolderBrowserDialog folder = new FolderBrowserDialog();
         List<PdfHandler> pdfFiles = new List<PdfHandler>();
@@ -38,6 +38,7 @@ namespace ChooseName
                     PdfHandler pdfFile = new PdfHandler(logger, filePath);
                     pdfFile.LoadPdf();
                     pdfFiles.Add(pdfFile);
+                    FilesToPrint.Add(false);
                 }
             }
         }
@@ -54,7 +55,7 @@ namespace ChooseName
 
         public void AddPagesToPrint(int fileNumber)
         {
-            FilesToPrint.Add(pdfFiles[fileNumber]);
+            FilesToPrint[fileNumber] = true;
         }
 
         public string Print()
@@ -65,11 +66,11 @@ namespace ChooseName
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
                 PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.PrintName, FileMode.Create));
                 document.Open();
-                foreach (PdfHandler file in FilesToPrint)
+                for (int fileIndex = 0; fileIndex < pdfFiles.Count; fileIndex++)
                 {
-                    for(int page = 1; page <= file.NumerOfPages(); page++)
+                    for(int page = FilesToPrint[fileIndex] ? 1 : (pdfFiles[fileIndex].NumerOfPages() / 2) + 1; page <= pdfFiles[fileIndex].NumerOfPages(); page++)
                     {
-                        copy.AddPage(file.GetPage(page, copy));
+                        copy.AddPage(pdfFiles[fileIndex].GetPage(page, copy));
                     }
                 }
                 document.Close();
