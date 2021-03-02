@@ -88,9 +88,6 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
-    <Compile Include="NewTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="PdfData.cs" />
     <Compile Include="FolderHandler.cs" />
     <Compile Include="PdfHandler.cs" />

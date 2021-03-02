@@ -10,9 +10,8 @@ namespace ChooseName
     class PdfHandler
     {
         PdfReader reader = null;
-        int[] pagesToPrint;
+        Queue<int> pagesToPrint = new Queue<int>();
         Queue<string> filenames = new Queue<string>();
-        int loc = 0;
         Logger logger;
         readonly string filePath = "";
 
@@ -36,8 +35,7 @@ namespace ChooseName
                 if (reader != null)
                     reader.Close();
                 reader = new PdfReader(filePath);
-                pagesToPrint = new int[NumerOfPages()];
-                loc = 0;
+                pagesToPrint.Clear();
             }
         }
 
@@ -72,7 +70,7 @@ namespace ChooseName
             iTextSharp.text.Document document = new iTextSharp.text.Document();
             PdfCopy copy = new PdfCopy(document, new FileStream(filename, FileMode.Create));
             document.Open();
-            for (int i = 0; i <= length; i++)
+            for (int i = 0; i < length; i++)
             {
                 copy.AddPage(copy.GetImportedPage(reader, startPage + i));
             }
@@ -93,22 +91,21 @@ namespace ChooseName
         {
             for (int i = 0; i < numberOfPages; i++)
             {
-                pagesToPrint[loc] = startPage + i;
-                loc++;
+                pagesToPrint.Enqueue(startPage + i);
             }
         }
 
         public string Print()
         {
-            if (pagesToPrint[0] != 0)
+            if (pagesToPrint.Count != 0)
             {
                 logger.Log("Printing...");
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
                 PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.PrintName, FileMode.Create));
                 document.Open();
-                for (int i = 0; pagesToPrint[i] != 0; i++)
+                foreach (int i in pagesToPrint)
                 {
-                    copy.AddPage(copy.GetImportedPage(reader, pagesToPrint[i]));
+                    copy.AddPage(copy.GetImportedPage(reader, i));
                 }
                 document.Close();
                 logger.Log("Printed successfully");
