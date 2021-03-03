@@ -25,5 +25,6 @@ namespace ChooseName
         public const bool AccountIsNumber = true;
         public const int RelativeMonth = -1;
         public const string CacheFile = "DATA.txt";
+        public const string CopyPrintName = @"\חשבונית_תושבים_להדפסה_העתק.pdf";
     }
 }

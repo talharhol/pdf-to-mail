@@ -68,16 +68,38 @@ namespace ChooseName
                 document.Open();
                 for (int fileIndex = 0; fileIndex < pdfFiles.Count; fileIndex++)
                 {
-                    for(int page = FilesToPrint[fileIndex] ? 1 : (pdfFiles[fileIndex].NumerOfPages() / 2) + 1; page <= pdfFiles[fileIndex].NumerOfPages(); page++)
+                    if (FilesToPrint[fileIndex])
                     {
-                        copy.AddPage(pdfFiles[fileIndex].GetPage(page, copy));
+                        for (int page =  1; page <= pdfFiles[fileIndex].NumerOfPages() / 2; page++)
+                        {
+                            copy.AddPage(pdfFiles[fileIndex].GetPage(page, copy));
+                        }
                     }
+                    
                 }
                 document.Close();
                 logger.Log("Printed successfully");
                 return Consts.DesktopLocation + Consts.PrintName;
             }
             return "";
+        }
+
+        public string PrintCopy()
+        {
+            logger.Log("Printing...");
+            iTextSharp.text.Document document = new iTextSharp.text.Document();
+            PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.CopyPrintName, FileMode.Create));
+            document.Open();
+            for (int fileIndex = 0; fileIndex < pdfFiles.Count; fileIndex++)
+            {
+                for(int page = (pdfFiles[fileIndex].NumerOfPages() / 2) + 1; page <= pdfFiles[fileIndex].NumerOfPages(); page++)
+                {
+                    copy.AddPage(pdfFiles[fileIndex].GetPage(page, copy));
+                }
+            }
+            document.Close();
+            logger.Log("Printed successfully");
+            return Consts.DesktopLocation + Consts.CopyPrintName;
         }
 
         public string GetFolderPath()
