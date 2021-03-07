@@ -13,7 +13,7 @@ namespace ChooseName
             List<MailData> mails = new List<MailData>();
             foreach (string mail in data.account.Mails())
             {
-                string id = mail + data.account.GetAccount() + data.PageNumber.ToString();
+                string id = mail;
                 mails.Add(new MailData(id, mail, data.getPages(), data.account.Password()));
             }
             return mails;
