@@ -11,8 +11,8 @@ namespace ChooseName
     {
         OpenFileDialog file = new OpenFileDialog();
         PdfReader reader = null;
-        Queue<int> pagesToPrint = new Queue<int>();
-        Queue<string> filenames = new Queue<string>();
+        List<bool> pagesToPrint = new List<bool>();
+        List<string> filenames = new List<string>();
         Logger logger;
 
         public PdfHandler(Logger logger)
@@ -38,6 +38,10 @@ namespace ChooseName
                     reader.Close();
                 reader = new PdfReader(file.FileName);
                 pagesToPrint.Clear();
+                for (int i = 0; i <= this.NumerOfPages(); i++)
+                {
+                    pagesToPrint.Add(false);
+                }
             }
         }
 
@@ -59,7 +63,7 @@ namespace ChooseName
             return PdfTextExtractor.GetTextFromPage(reader, pageNumber, new LocationTextExtractionStrategy());
         }
 
-        public string Slice(int startPage, int length, string password)
+        public string CreateSubFile(List<int> pages, string password)
         {
             DeleteTempFiles();
             string filename = GetFileName();
@@ -67,9 +71,9 @@ namespace ChooseName
             iTextSharp.text.Document document = new iTextSharp.text.Document();
             PdfCopy copy = new PdfCopy(document, new FileStream(filename, FileMode.Create));
             document.Open();
-            for (int i = 0; i < length; i++)
+            foreach (int page in pages)
             {
-                copy.AddPage(copy.GetImportedPage(reader, startPage + i));
+                copy.AddPage(copy.GetImportedPage(reader, page));
             }
             document.Close();
 
@@ -84,25 +88,28 @@ namespace ChooseName
             return locked_filename;
         }
 
-        public void AddPagesToPrint(int startPage, int numberOfPages)
+        public void AddPagesToPrint(List<int> pages)
         {
-            for (int i = 0; i < numberOfPages; i++)
+            foreach (int page in pages)
             {
-                pagesToPrint.Enqueue(startPage + i);
+                pagesToPrint[page] = true;
             }
         }
 
         public string Print()
         {
-            if (pagesToPrint.Count != 0)
+            if (pagesToPrint.Contains(true))
             {
                 logger.Log("Printing...");
                 iTextSharp.text.Document document = new iTextSharp.text.Document();
                 PdfCopy copy = new PdfCopy(document, new FileStream(Consts.DesktopLocation + Consts.PrintName, FileMode.Create));
                 document.Open();
-                foreach (int i in pagesToPrint)
+                for (int i = 1; i < pagesToPrint.Count; i++)
                 {
-                    copy.AddPage(copy.GetImportedPage(reader, i));
+                    if (pagesToPrint[i])
+                    {
+                        copy.AddPage(copy.GetImportedPage(reader, i));
+                    }
                 }
                 document.Close();
                 logger.Log("Printed successfully");
@@ -144,7 +151,7 @@ namespace ChooseName
                 }
                 catch
                 {
-                    filenames.Enqueue(filenamesArry[i]);
+                    filenames.Add(filenamesArry[i]);
                 }
             }
         }
@@ -158,7 +165,7 @@ namespace ChooseName
                 addToAppendix = index.ToString();
                 index++;
             }
-            filenames.Enqueue("File" + addToAppendix + appendix + ".pdf");
+            filenames.Add("File" + addToAppendix + appendix + ".pdf");
             return "File" + addToAppendix + appendix + ".pdf";
         }
     }

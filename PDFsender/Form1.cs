@@ -24,6 +24,7 @@ namespace pdfScanner
             {
                 Disablebuttons();
                 int numofpages = 1;
+                int start = 1;
                 LoadBar.Maximum = pdfHandler.NumerOfPages();
                 for (int i = 1; i <= pdfHandler.NumerOfPages(); i++)
                 {
@@ -33,8 +34,9 @@ namespace pdfScanner
                         numofpages++;
                         continue;
                     }
-                    yield return new PdfData(new Account(ExtractAccountNumber(i - (numofpages - 1)), excel, logHandler), i - (numofpages - 1), numofpages);
+                    yield return new PdfData(new Account(ExtractAccountNumber(start), excel, logHandler), start, numofpages);
                     numofpages = 1;
+                    start = i + 1;
                 }
                 logHandler.Log("Finished succesfully");
                 Enablebuttons();
@@ -44,31 +46,53 @@ namespace pdfScanner
         private void RunMainProgram(bool isDraft = false)
         {
             GoToMainPage();
-            string filename = "";
             app = new Outlook.Application();
+            Dictionary<string, List<MailData>> mails = new Dictionary<string, List<MailData>>();
             foreach (PdfData data in GetPdfData())
             {
-                bool SentMail = false;
-                string[] mails = data.account.Mails();
-                if (mails.Length > 0)
+                foreach (MailData mail in Consts.generateMails(data))
                 {
-                    filename = pdfHandler.Slice(data.PageNumber, data.NumberOfPages, data.account.Password());
-                    logHandler.AddLog((isDraft ? "Draft to: " : "Mail to: ") + mails[0]);
+                    if (!mails.ContainsKey(mail.id))
+                    {
+                        mails[mail.id] = new List<MailData>();
+                    }
+                    mails[mail.id].Add(mail);
                 }
-                foreach (string mail in mails)
+                if (data.account.Mails().Length == 0 || data.account.IsPrint())
+                {
+                    pdfHandler.AddPagesToPrint(data.getPages());
+                    logHandler.AddLog("Print account: " + data.account.GetAccount());
+                }
+            }
+            foreach (string id in mails.Keys)
+            {
+                List<int> pagesToSend = new List<int>();
+                string email = "";
+                string password = "";
+                bool shouldSend = true;
+                foreach (MailData mail in mails[id])
+                {
+                    pagesToSend.AddRange(mail.pages);
+                    if (email == "") email = mail.dstMail;
+                    if (password == "") password = mail.password;
+                    if (email != mail.dstMail)
+                    {
+                        logHandler.Log("Bad e-mail distribution - dropping");
+                        shouldSend = false;
+                    }
+                }
+                if (shouldSend)
                 {
                     try
                     {
-                        SendMail(mail, filename, isDraft);
-                        SentMail = true;
+                        SendMail(email, pdfHandler.CreateSubFile(pagesToSend, password), isDraft);
                     }
-                    catch { }
+                    catch
+                    {
+                        pdfHandler.AddPagesToPrint(pagesToSend);
+                    }
                 }
-                if (!SentMail || data.account.IsPrint())
-                {
-                    pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
-                    logHandler.AddLog("Print account: " + data.account.GetAccount());
-                }
+                else pdfHandler.AddPagesToPrint(pagesToSend);
             }
             string printPath = pdfHandler.Print();
             if (printPath != "")
@@ -178,7 +202,7 @@ namespace pdfScanner
                 if (data.account.Mails().Length == 0 || data.account.IsPrint())
                 {
                     logHandler.AddLog("Print");
-                    pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
+                    pdfHandler.AddPagesToPrint(data.getPages());
                 }
             }
             string printPath = pdfHandler != null ? pdfHandler.Print() : "";

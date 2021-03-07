@@ -88,6 +88,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
+    <Compile Include="MailData.cs" />
     <Compile Include="PdfData.cs" />
     <Compile Include="PdfHandler.cs" />
     <Compile Include="Program.cs" />
