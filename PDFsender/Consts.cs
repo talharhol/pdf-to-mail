@@ -1,11 +1,23 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+
 
 
 namespace ChooseName
 {
     class Consts
     {
+        static public List<MailData> generateMails(PdfData data)
+        {
+            List<MailData> mails = new List<MailData>();
+            foreach (string mail in data.account.Mails())
+            {
+                string id = mail + data.account.GetAccount() + data.PageNumber.ToString();
+                mails.Add(new MailData(id, mail, data.getPages(), data.account.Password()));
+            }
+            return mails;
+        }
         public const string PasswordRow = "E";
         public const string EmptyAccount = "-1";
         public const string AccountRow = "A";

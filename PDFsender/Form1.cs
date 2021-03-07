@@ -24,6 +24,7 @@ namespace pdfScanner
             {
                 Disablebuttons();
                 int numofpages = 1;
+                int start = 1;
                 LoadBar.Maximum = pdfHandler.NumerOfPages();
                 for (int i = 1; i <= pdfHandler.NumerOfPages(); i++)
                 {
@@ -33,8 +34,9 @@ namespace pdfScanner
                         numofpages++;
                         continue;
                     }
-                    yield return new PdfData(new Account(ExtractAccountNumber(i - (numofpages - 1)), excel, logHandler), i - (numofpages - 1), numofpages);
+                    yield return new PdfData(new Account(ExtractAccountNumber(start), excel, logHandler), start, numofpages);
                     numofpages = 1;
+                    start = i + 1;
                 }
                 logHandler.Log("Finished succesfully");
                 Enablebuttons();
@@ -43,48 +45,54 @@ namespace pdfScanner
 
         private void RunMainProgram(bool isDraft = false)
         {
-            List<string> fileNames = new List<string>();
-            Dictionary<string, List<PdfData>> mails = new Dictionary<string, List<PdfData>>();
             GoToMainPage();
             app = new Outlook.Application();
-
+            Dictionary<string, List<MailData>> mails = new Dictionary<string, List<MailData>>();
             foreach (PdfData data in GetPdfData())
             {
-                foreach (string mail in data.account.Mails())
+                foreach (MailData mail in Consts.generateMails(data))
                 {
-                    if (!mails.ContainsKey(mail))
+                    if (!mails.ContainsKey(mail.id))
                     {
-                        mails[mail] = new List<PdfData>();
+                        mails[mail.id] = new List<MailData>();
                     }
-                    mails[mail].Add(data);
+                    mails[mail.id].Add(mail);
                 }
                 if (data.account.Mails().Length == 0 || data.account.IsPrint())
                 {
-                    pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
+                    pdfHandler.AddPagesToPrint(data.getPages());
                     logHandler.AddLog("Print account: " + data.account.GetAccount());
                 }
             }
-            foreach (string mail in mails.Keys)
+            foreach (string id in mails.Keys)
             {
-                foreach(PdfData data in mails[mail])
+                List<int> pagesToSend = new List<int>();
+                string email = "";
+                string password = "";
+                bool shouldSend = true;
+                foreach (MailData mail in mails[id])
                 {
-                    fileNames.Add(pdfHandler.Slice(data.PageNumber, data.NumberOfPages, data.account.Password()));
-                }
-                try
-                {
-                    SendMail(mail, fileNames, isDraft);
-                }
-                catch
-                {
-                    foreach (PdfData data in mails[mail])
+                    pagesToSend.AddRange(mail.pages);
+                    if (email == "") email = mail.dstMail;
+                    if (password == "") password = mail.password;
+                    if (email != mail.dstMail)
                     {
-                        pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
+                        logHandler.Log("Bad e-mail distribution - dropping");
+                        shouldSend = false;
                     }
                 }
-                foreach (string fileName in fileNames)
+                if (shouldSend)
                 {
-                    pdfHandler.DeleteTempFile(fileName);
+                    try
+                    {
+                        SendMail(email, pdfHandler.CreateSubFile(pagesToSend, password), isDraft);
+                    }
+                    catch
+                    {
+                        pdfHandler.AddPagesToPrint(pagesToSend);
+                    }
                 }
+                else pdfHandler.AddPagesToPrint(pagesToSend);
             }
             string printPath = pdfHandler.Print();
             if (printPath != "")
@@ -138,15 +146,12 @@ namespace pdfScanner
             return page.Contains(Consts.EndOfPageSeperator);
         }
 
-        void SendMail(string ToMail, List<string> fileNames, bool draft = false)
+        void SendMail(string ToMail, string filename, bool draft = false)
         {
             Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
             mail.To = ToMail;
             mail.Subject = addtotitle1.Text;
-            foreach(string fileName in fileNames)
-            {
-                mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + fileName);
-            }
+            mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename);
             if (draft)
             {
                 ((Outlook._MailItem)mail).Save();
@@ -176,9 +181,12 @@ namespace pdfScanner
             LogHistoryContainer.Controls.Add(logHistory);
             this.Text = Consts.Title;
             logHandler = new Logger(logger, logHistory);
-            if (File.Exists(Consts.CacheFile)) {
+            if (File.Exists(Consts.CacheFile))
+            {
                 logHandler.Log("You're good to go");
-            } else {
+            }
+            else
+            {
                 logHandler.Log("Please choose database file", true);
 
             }
@@ -197,7 +205,7 @@ namespace pdfScanner
                 if (data.account.Mails().Length == 0 || data.account.IsPrint())
                 {
                     logHandler.AddLog("Print");
-                    pdfHandler.AddPagesToPrint(data.PageNumber, data.NumberOfPages);
+                    pdfHandler.AddPagesToPrint(data.getPages());
                 }
             }
             string printPath = pdfHandler != null ? pdfHandler.Print() : "";
@@ -215,7 +223,7 @@ namespace pdfScanner
                 this.Controls.Add(Cencel_send);
                 this.Controls.Add(logger);
             }
-            
+
 
         }
 
@@ -239,7 +247,7 @@ namespace pdfScanner
                     + EncriptedPassword + " |");
             }
             Testfile.Dispose();
-            if(didRun)
+            if (didRun)
                 RunCmdCommand("\"" + Consts.DesktopLocation + "\\TESTFILE.txt\"");
         }
 

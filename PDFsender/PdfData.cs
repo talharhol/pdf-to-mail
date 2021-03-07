@@ -17,5 +17,15 @@ namespace ChooseName
             PageNumber = pageNumber;
             NumberOfPages = numberOfPages;
         }
+
+        public List<int> getPages()
+        {
+            List<int> pages = new List<int>();
+            for (int i=0; i < this.NumberOfPages; i++)
+            {
+                pages.Add(this.PageNumber + i);
+            }
+            return pages;
+        }
     }
 }
