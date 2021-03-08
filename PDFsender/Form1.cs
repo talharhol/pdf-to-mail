@@ -67,14 +67,15 @@ namespace pdfScanner
             foreach (string id in mails.Keys)
             {
                 List<int> pagesToSend = new List<int>();
-                string email = "";
-                string password = "";
+                string email = null;
+                string password = null;
                 bool shouldSend = true;
                 foreach (MailData mail in mails[id])
                 {
                     pagesToSend.AddRange(mail.pages);
-                    if (email == "") email = mail.dstMail;
-                    if (password == "") password = mail.password;
+                    if (email == null) email = mail.dstMail;
+                    if (password == null) password = mail.password;
+                    if (password != mail.password) password = "";
                     if (email != mail.dstMail)
                     {
                         logHandler.Log("Bad e-mail distribution - dropping");
