@@ -11,10 +11,18 @@ namespace ChooseName
         static public List<MailData> generateMails(PdfData data)
         {
             List<MailData> mails = new List<MailData>();
-            foreach (string mail in data.account.Mails())
+            string[] user_mails = data.account.Mails();
+            if (user_mails.Length > 0)
             {
-                string id = mail;
+                string mail = user_mails[0];
+                string id = mail + data.account.GetAccount() + data.PageNumber.ToString();
                 mails.Add(new MailData(id, mail, data.getPages(), data.account.Password()));
+                if (mail.Length > 1)
+                {
+                    mail = user_mails[1];
+                    id = mail;
+                    mails.Add(new MailData(id, mail, data.getPages(), data.account.Password()));
+                }
             }
             return mails;
         }
