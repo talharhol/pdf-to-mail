@@ -52,6 +52,17 @@ namespace ChooseName
         {
             return account;
         }
+
+        public string PrimeryMail()
+        {
+            string mail = excel.GetMail(this);
+            return mail != "" ? mail : null;
+        }
+        public string SeconderyMail()
+        {
+            string mail = excel.GetSecondMail(this);
+            return mail != "" ? mail : null;
+        }
         
     }
 }
