@@ -50,7 +50,7 @@ namespace pdfScanner
             Dictionary<string, List<MailData>> mails = new Dictionary<string, List<MailData>>();
             foreach (PdfData data in GetPdfData())
             {
-                foreach (MailData mail in Consts.generateMails(data))
+                foreach (MailData mail in Consts.generateMails(data, excel))
                 {
                     if (!mails.ContainsKey(mail.id))
                     {
