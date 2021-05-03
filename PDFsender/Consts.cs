@@ -11,28 +11,26 @@ namespace ChooseName
         static public List<MailData> generateMails(PdfData data, ExcelApp excel)
         {
             List<MailData> mails = new List<MailData>();
-            string[] user_mails = data.account.Mails();
-            if (user_mails.Length > 0)
+            if (data.account.PrimeryMail() != null)
             {
-                string mail = user_mails[0];
-                string id = mail + data.account.GetAccount() + data.PageNumber.ToString();
-                mails.Add(new MailData(id, mail, data.getPages(), data.account.Password()));
-                if (mail.Length > 1)
-                {
-                    mail = user_mails[1];
-                    id = mail;
-                    mails.Add(new MailData(id, mail, data.getPages(), data.account.Password()));
-                }
+                string email = data.account.PrimeryMail();
+                mails.Add(new MailData(email + "-admin", email, data.getPages(), excel.GetCellByAccount(PasswordRow, data.account)));
+            }
+            if (data.account.SeconderyMail() != null)
+            {
+                string email = data.account.SeconderyMail();
+                mails.Add(new MailData(email + "-employee", email, data.getPages(), excel.GetCellByAccount(SecondaryPasswordRow, data.account)));
             }
             return mails;
         }
-        public const string PasswordRow = "E";
-        public const string EmptyAccount = "-1";
         public const string AccountRow = "A";
         public const string EmailRow = "D";
+        public const string PasswordRow = "E";
         public const string SecondEmailRow = "F";
-        public const string PrintRow = "G";
+        public const string SecondaryPasswordRow = "G";
+        public const string PrintRow = "H";
         public const string PrintValue = "#";
+        public const string EmptyAccount = "-1";
         public const string ExcelPassword = "alibaba";
         public static string DesktopLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         public const string PrintName = @"\משכור_שכירים_להדפסה.pdf";
