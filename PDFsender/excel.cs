@@ -78,7 +78,7 @@ namespace ChooseName
 
             for (int i = 1; i <= str.GetLength(0); i++)
             {
-                if (account.IsAccountMatch(str[i, 1].ToString()))
+                if (str[i, 1] != null && account.IsAccountMatch(str[i, 1].ToString()))
                 {
                     if (xlApp.get_Range(column + (i + 1).ToString()).Value2 != null)
                         return xlApp.get_Range(column + (i + 1).ToString()).Value2.ToString();
