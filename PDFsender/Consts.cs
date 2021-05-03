@@ -8,7 +8,7 @@ namespace ChooseName
 {
     class Consts
     {
-        static public List<MailData> generateMails(PdfData data)
+        static public List<MailData> generateMails(PdfData data, ExcelApp excel)
         {
             List<MailData> mails = new List<MailData>();
             foreach (string mail in data.account.Mails())
