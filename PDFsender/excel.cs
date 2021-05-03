@@ -166,11 +166,14 @@ namespace ChooseName
         private string CalcNumberOfRows()
         {
             int i = 1;
-            do
+            for (int j = 0; j < 3; j++)
             {
-                i++;
+                do
+                {
+                    i++;
 
-            } while (xlApp.get_Range("A" + i.ToString()).Value2 != null);
+                } while (xlApp.get_Range("A" + i.ToString()).Value2 != null);
+            }
             return (i - 1).ToString();
         }
     }
