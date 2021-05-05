@@ -18,6 +18,7 @@ namespace ChooseName
             this.id = id;
             this.dstMail = email;
             this.pages = pages;
+            this.password = password;
         }
     }
 }

@@ -168,11 +168,12 @@ namespace ChooseName
             int i = 1;
             for (int j = 0; j < 3; j++)
             {
-                do
+                i++;
+                while (xlApp.get_Range("A" + i.ToString()).Value2 != null)
                 {
                     i++;
-
-                } while (xlApp.get_Range("A" + i.ToString()).Value2 != null);
+                    j = 0;
+                }
             }
             return (i - 1).ToString();
         }
