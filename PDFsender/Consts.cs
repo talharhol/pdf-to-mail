@@ -16,7 +16,7 @@ namespace ChooseName
         public const string ExcelPassword = "1234";
         public static string DesktopLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         public const string PrintName = @"\חשבונית_חודשית_להדפסה.pdf";
-        public const string Subject = "חשבונית חודשית מחצבות כנרת ";
+        public const string Subject = "חשבונית חודשית ";
         public const string Title = "חשבונית חודשית";
         public const string EndOfPageSeperator = "";
         public static System.util.RectangleJ AccountArea = new System.util.RectangleJ(117, 677, 127, 27);
