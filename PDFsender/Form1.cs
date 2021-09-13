@@ -155,11 +155,7 @@ namespace pdfScanner
         {
             Outlook.MailItem mail = app.CreateItem(Outlook.OlItemType.olMailItem);
             mail.To = ToMail;
-            mail.Subject = Consts.Subject;
-            DateTime relativeMonth = DateTime.Now.AddMonths(Consts.RelativeMonth);
-            string relativeMonthString = relativeMonth.Month.ToString() + "/" + relativeMonth.Year.ToString() + " ";
-            mail.Subject += relativeMonthString;
-            mail.Subject += addtotitle1.Text == "Additional text to mail subject" ? "" : addtotitle1.Text;
+            mail.Subject = addtotitle1.Text;
             mail.Attachments.Add(System.IO.Directory.GetCurrentDirectory().ToString() + @"\" + filename);
             if (draft)
             {
@@ -185,6 +181,8 @@ namespace pdfScanner
         public PDFsender()
         {
             InitializeComponent();
+            DateTime relativeMonth = DateTime.Now.AddMonths(Consts.RelativeMonth);
+            this.addtotitle1.Text = Consts.Subject + relativeMonth.Month.ToString() + "/" + relativeMonth.Year.ToString() + " ";
             LogHistoryContainer.Controls.Add(logHistory);
             this.Text = Consts.Title;
             logHandler = new Logger(logger, logHistory);
